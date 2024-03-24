@@ -1,3 +1,9 @@
+using ManagementSystem.Application.Features.Queries.WorkTask;
+using ManagementSystem.Domain.Services.Abstract;
+using ManagementSystem.Domain.Services.Concrete;
+using MediatR;
+using System.Reflection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +12,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IWorkTaskService, WorkTaskService>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetWorkTasksQueryHandler).GetTypeInfo().Assembly));
 
 var app = builder.Build();
 
