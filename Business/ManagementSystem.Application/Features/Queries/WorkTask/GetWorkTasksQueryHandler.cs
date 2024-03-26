@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ManagementSystem.Application.Features.Queries.WorkTask
 {
-    public class GetWorkTasksQueryHandler : IRequestHandler<GetWorkTasksQuery, IList<WorkTasksDto>?>
+    public class GetWorkTasksQueryHandler : IRequestHandler<GetWorkTasksQuery, IList<WorkTasksDto>>
     {
         private readonly IWorkTaskService workTaskService;
 
@@ -13,7 +13,7 @@ namespace ManagementSystem.Application.Features.Queries.WorkTask
             this.workTaskService = workTaskService;
         }
 
-        public async Task<IList<WorkTasksDto>?> Handle(GetWorkTasksQuery request, CancellationToken cancellationToken)
+        public async Task<IList<WorkTasksDto>> Handle(GetWorkTasksQuery request, CancellationToken cancellationToken)
         {
             var result = await workTaskService.GetAllAsync(cancellationToken);
             return result;
