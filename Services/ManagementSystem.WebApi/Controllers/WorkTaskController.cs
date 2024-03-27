@@ -24,6 +24,7 @@ namespace ManagementSystem.WebApi.Controllers
         {
             var query = new GetWorkTasksQuery();
             var result = await _mediator.Send(query, cancellationToken);
+
             return Ok(result);
         }
     }
