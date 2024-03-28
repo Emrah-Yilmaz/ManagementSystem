@@ -1,5 +1,4 @@
 ﻿using ManagementSystem.Application.Features.Queries.WorkTask;
-using ManagementSystem.WebApi.Models.WorkTask.Request;
 using ManagementSystem.WebApi.Models.WorkTask.Response;
 
 namespace ManagementSystem.WebApi.MappingProfile
@@ -9,7 +8,6 @@ namespace ManagementSystem.WebApi.MappingProfile
         public WorkTaskMappingProfile()
         {
             CreateMap<WorkTasksDto, WorkTasksResponse>();
-            CreateMap<WorkTaskRequest, GetWorkTasksQuery>();
         }
     }
 }
