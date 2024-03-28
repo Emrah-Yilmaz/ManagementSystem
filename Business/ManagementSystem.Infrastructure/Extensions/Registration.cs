@@ -12,7 +12,7 @@ namespace ManagementSystem.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructureRegistration(this IServiceCollection services,
                                                                         IConfiguration configuration)
         {
-            services.AddDbContext<DbContext>(conf =>
+            services.AddDbContext<AppDbContext>(conf =>
             {
                 var connStr = configuration["SqlConnection"].ToString();
                 conf.UseSqlServer(connStr, opt =>

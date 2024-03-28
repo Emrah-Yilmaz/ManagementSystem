@@ -4,6 +4,6 @@ namespace ManagementSystem.Domain.Services.Abstract
 {
     public interface IWorkTaskService : IDomainService
     {
-        public Task<IList<WorkTasksDto>> GetAllAsync(CancellationToken cancellationToken = default); 
+        public Task<IList<WorkTasksDto>> GetTasksWithUserAsync(CancellationToken cancellationToken = default); 
     }
 }
