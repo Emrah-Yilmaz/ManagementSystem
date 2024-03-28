@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using ManagementSystem.Application.Features.Queries.WorkTask;
-using ManagementSystem.Application.Validators;
-using Microsoft.AspNetCore.Identity;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -13,7 +12,10 @@ namespace ManagementSystem.Application.Extensions
         public static IServiceCollection AddApplicationRegistration(this IServiceCollection services)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetWorkTasksQueryHandler).GetTypeInfo().Assembly));
-            services.AddValidatorsFromAssemblyContaining<TaskValidator>();
+
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<GetWorkTasksQueryValidator>();
             return services;
         }
     }
