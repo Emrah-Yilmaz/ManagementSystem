@@ -1,9 +1,6 @@
-using ManagementSystem.Application.Features.Queries.WorkTask;
-using ManagementSystem.Domain.Services.Abstract;
-using ManagementSystem.Domain.Services.Concrete;
+using ManagementSystem.Application.Extensions;
+using ManagementSystem.Domain.Extensions;
 using ManagementSystem.Infrastructure.Extensions;
-using MediatR;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,10 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetWorkTasksQueryHandler).GetTypeInfo().Assembly));
-
-builder.Services.AddScoped<IWorkTaskService, WorkTaskService>();
-
+builder.Services.AddApplicationRegistration();
+builder.Services.AddDomainRegistration();
 builder.Services.AddInfrastructureRegistration(builder.Configuration);
 
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
