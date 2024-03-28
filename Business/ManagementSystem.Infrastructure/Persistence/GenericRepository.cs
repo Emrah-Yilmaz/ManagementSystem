@@ -1,5 +1,6 @@
 ﻿using ManagementSystem.Domain.Entities;
 using ManagementSystem.Domain.Persistence;
+using ManagementSystem.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -7,11 +8,11 @@ namespace ManagementSystem.Infrastructure.Persistence
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly DbContext dbContext;
-        protected DbSet<TEntity> entity => dbContext.Set<TEntity>();
-        public GenericRepository(DbContext dbContext)
+        private readonly AppDbContext _dbContext;
+        protected DbSet<TEntity> entity => _dbContext.Set<TEntity>();
+        public GenericRepository(AppDbContext dbContext)
         {
-            this.dbContext = dbContext ?? throw new ArgumentException(nameof(dbContext));
+            _dbContext = dbContext ?? throw new ArgumentException(nameof(_dbContext));
         }
 
         #region Get Methods
@@ -110,12 +111,12 @@ namespace ManagementSystem.Infrastructure.Persistence
 
             if (noTracking)
             {
-                dbContext.Entry(found).State = EntityState.Detached;
+                _dbContext.Entry(found).State = EntityState.Detached;
             }
 
             foreach (var include in includes)
             {
-                dbContext.Entry(found).Reference(include).Load();
+                _dbContext.Entry(found).Reference(include).Load();
             }
 
             return found;
@@ -148,25 +149,25 @@ namespace ManagementSystem.Infrastructure.Persistence
         public virtual int Add(TEntity entity)
         {
             this.entity.Add(entity);
-            return dbContext.SaveChanges();
+            return _dbContext.SaveChanges();
         }
 
         public virtual int Add(IEnumerable<TEntity> entities)
         {
             this.entity.AddRange(entities);
-            return dbContext.SaveChanges();
+            return _dbContext.SaveChanges();
         }
 
         public virtual async Task<int> AddAsync(TEntity entity)
         {
             await this.entity.AddAsync(entity);
-            return await dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
 
         public virtual async Task<int> AddAsync(IEnumerable<TEntity> entities)
         {
             await this.entity.AddRangeAsync(entities);
-            return await dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
         #endregion
 
@@ -174,17 +175,17 @@ namespace ManagementSystem.Infrastructure.Persistence
         public int Update(TEntity entity)
         {
             this.entity.Attach(entity);
-            dbContext.Entry(entity).State = EntityState.Modified;
+            _dbContext.Entry(entity).State = EntityState.Modified;
 
-            return dbContext.SaveChanges();
+            return _dbContext.SaveChanges();
         }
 
         public async Task<int> UpdateAsync(TEntity entity)
         {
             this.entity.Attach(entity);
-            dbContext.Entry(entity).State = EntityState.Modified;
+            _dbContext.Entry(entity).State = EntityState.Modified;
 
-            return await dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
         #endregion
 
@@ -193,20 +194,20 @@ namespace ManagementSystem.Infrastructure.Persistence
         {
             if (!this.entity.Local.Any(x => EqualityComparer<int>.Default.Equals(x.Id, entity.Id)))
             {
-                dbContext.Update(entity);
+                _dbContext.Update(entity);
             }
 
-            return dbContext.SaveChanges();
+            return _dbContext.SaveChanges();
         }
 
         public virtual async Task<int> AddOrUpdateAsync(TEntity entity)
         {
             if (!this.entity.Local.Any(x => EqualityComparer<int>.Default.Equals(x.Id, entity.Id)))
             {
-                dbContext.Update(entity);
+                _dbContext.Update(entity);
             }
 
-            return await dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
         #endregion
 
@@ -229,14 +230,14 @@ namespace ManagementSystem.Infrastructure.Persistence
 
         public virtual bool DeleteRange(Expression<Func<TEntity, bool>> predicate)
         {
-            dbContext.RemoveRange(entity.Where(predicate));
-            return dbContext.SaveChanges() > 0;
+            _dbContext.RemoveRange(entity.Where(predicate));
+            return _dbContext.SaveChanges() > 0;
         }
 
         public async Task<bool> DeleteRangeAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            dbContext.RemoveRange(entity.Where(predicate));
-            return await dbContext.SaveChangesAsync() > 0;
+            _dbContext.RemoveRange(entity.Where(predicate));
+            return await _dbContext.SaveChangesAsync() > 0;
         }
         #endregion
 
@@ -244,12 +245,12 @@ namespace ManagementSystem.Infrastructure.Persistence
 
         public async Task<int> SaveChangeAsync()
         {
-            return await dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
 
         public int SaveChange()
         {
-            return dbContext.SaveChanges();
+            return _dbContext.SaveChanges();
         }
 
         #endregion

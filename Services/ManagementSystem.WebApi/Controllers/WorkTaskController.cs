@@ -1,7 +1,12 @@
-﻿using ManagementSystem.Application.Features.Queries.WorkTask;
+﻿using AutoMapper;
+using ManagementSystem.Application.Features.Queries.WorkTask;
+using ManagementSystem.Domain.Entities;
+using ManagementSystem.Infrastructure.Context;
 using ManagementSystem.WebApi.Models.WorkTask.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace ManagementSystem.WebApi.Controllers
@@ -11,10 +16,13 @@ namespace ManagementSystem.WebApi.Controllers
     public class WorkTaskController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public WorkTaskController(IMediator mediator)
+
+        public WorkTaskController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -24,8 +32,8 @@ namespace ManagementSystem.WebApi.Controllers
         {
             var query = new GetWorkTasksQuery();
             var result = await _mediator.Send(query, cancellationToken);
-
-            return Ok(result);
+            var mappedResult = _mapper.Map<List<WorkTasksResponse>>(result);
+            return Ok(mappedResult);
         }
     }
 }

@@ -1,6 +1,7 @@
 using ManagementSystem.Application.Extensions;
 using ManagementSystem.Domain.Extensions;
 using ManagementSystem.Infrastructure.Extensions;
+using ManagementSystem.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +11,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddApplicationRegistration();
+builder.Services.AddWebApiRegistration();
 builder.Services.AddDomainRegistration();
 builder.Services.AddInfrastructureRegistration(builder.Configuration);
 
