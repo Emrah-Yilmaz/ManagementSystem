@@ -12,7 +12,7 @@ namespace ManagementSystem.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructureRegistration(this IServiceCollection services,
                                                                         IConfiguration configuration)
         {
-            services.AddDbContext<DbContext>(conf =>
+            services.AddDbContext<AppDbContext>(conf =>
             {
                 var connStr = configuration["SqlConnection"].ToString();
                 conf.UseSqlServer(connStr, opt =>
@@ -20,8 +20,10 @@ namespace ManagementSystem.Infrastructure.Extensions
                     opt.EnableRetryOnFailure();
                 });
             });
+
             services.AddScoped<IWorkTaskRepository, WorkTaskRepository>();
             services.AddScoped<DbContext, AppDbContext>();
+
             return services;
         }
     }

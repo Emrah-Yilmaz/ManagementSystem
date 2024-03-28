@@ -15,7 +15,7 @@ namespace ManagementSystem.Application.Features.Queries.WorkTask
 
         public async Task<IList<WorkTasksDto>> Handle(GetWorkTasksQuery request, CancellationToken cancellationToken)
         {
-            var result = await workTaskService.GetAllAsync(cancellationToken);
+            var result = await workTaskService.GetTasksWithUserAsync(cancellationToken);
             return result;
         }
     }

@@ -1,9 +1,7 @@
-using ManagementSystem.Application.Features.Queries.WorkTask;
-using ManagementSystem.Domain.Services.Abstract;
-using ManagementSystem.Domain.Services.Concrete;
+using ManagementSystem.Application.Extensions;
+using ManagementSystem.Domain.Extensions;
 using ManagementSystem.Infrastructure.Extensions;
-using MediatR;
-using System.Reflection;
+using ManagementSystem.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +11,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetWorkTasksQueryHandler).GetTypeInfo().Assembly));
-
-builder.Services.AddScoped<IWorkTaskService, WorkTaskService>();
-
+builder.Services.AddApplicationRegistration();
+builder.Services.AddWebApiRegistration();
+builder.Services.AddDomainRegistration();
 builder.Services.AddInfrastructureRegistration(builder.Configuration);
 
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
