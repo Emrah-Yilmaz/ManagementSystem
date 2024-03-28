@@ -20,8 +20,10 @@ namespace ManagementSystem.Infrastructure.Extensions
                     opt.EnableRetryOnFailure();
                 });
             });
+
             services.AddScoped<IWorkTaskRepository, WorkTaskRepository>();
             services.AddScoped<DbContext, AppDbContext>();
+
             return services;
         }
     }
