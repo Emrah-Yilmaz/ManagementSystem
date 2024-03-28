@@ -1,5 +1,4 @@
-﻿using ManagementSystem.Application.Features.Queries.WorkTask;
-using ManagementSystem.WebApi.Models.WorkTask.Response;
+﻿using ManagementSystem.WebApi.Models.WorkTask.Response;
 
 namespace ManagementSystem.WebApi.MappingProfile
 {
