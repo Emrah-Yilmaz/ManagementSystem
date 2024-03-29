@@ -38,7 +38,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedById")
@@ -48,7 +47,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ModifiedById")
@@ -81,7 +79,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedById")
@@ -91,7 +88,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ModifiedById")
@@ -118,7 +114,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedById")
@@ -128,7 +123,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ModifiedById")
@@ -155,7 +149,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedById")
@@ -165,7 +158,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ModifiedById")
@@ -186,10 +178,12 @@ namespace ManagementSystem.Infrastructure.Migrations
             modelBuilder.Entity("ManagementSystem.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedById")
@@ -210,7 +204,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ModifiedById")
@@ -233,6 +226,8 @@ namespace ManagementSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.ToTable("User");
                 });
 
@@ -245,7 +240,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedById")
@@ -258,7 +252,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ModifiedById")
@@ -283,7 +276,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedById")
@@ -303,7 +295,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ModifiedById")
@@ -356,9 +347,8 @@ namespace ManagementSystem.Infrastructure.Migrations
                 {
                     b.HasOne("ManagementSystem.Domain.Entities.Department", "Department")
                         .WithMany("Users")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Department");
                 });

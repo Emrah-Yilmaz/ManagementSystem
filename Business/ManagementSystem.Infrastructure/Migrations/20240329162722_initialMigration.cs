@@ -19,7 +19,11 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedById = table.Column<int>(type: "int", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,7 +38,11 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedById = table.Column<int>(type: "int", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,7 +57,11 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedById = table.Column<int>(type: "int", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,7 +72,8 @@ namespace ManagementSystem.Infrastructure.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -68,14 +81,18 @@ namespace ManagementSystem.Infrastructure.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedById = table.Column<int>(type: "int", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Department_Id",
-                        column: x => x.Id,
+                        name: "FK_User_Department_DepartmentId",
+                        column: x => x.DepartmentId,
                         principalTable: "Department",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -94,7 +111,11 @@ namespace ManagementSystem.Infrastructure.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedById = table.Column<int>(type: "int", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,7 +148,11 @@ namespace ManagementSystem.Infrastructure.Migrations
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedById = table.Column<int>(type: "int", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -157,7 +182,11 @@ namespace ManagementSystem.Infrastructure.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     TaskId = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedById = table.Column<int>(type: "int", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -200,6 +229,11 @@ namespace ManagementSystem.Infrastructure.Migrations
                 name: "IX_Task_UserId",
                 table: "Task",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_DepartmentId",
+                table: "User",
+                column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRole_RoleId",

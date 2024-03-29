@@ -1,5 +1,5 @@
-﻿using ManagementSystem.Domain.Services.Abstract;
-using ManagementSystem.WebApi.Models.WorkTask.Response;
+﻿using ManagementSystem.Domain.Models.Dto;
+using ManagementSystem.Domain.Services.Abstract;
 using MediatR;
 
 namespace ManagementSystem.Application.Features.Queries.WorkTask

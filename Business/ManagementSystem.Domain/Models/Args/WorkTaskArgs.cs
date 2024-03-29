@@ -1,4 +1,4 @@
-﻿namespace ManagementSystem.Domain.Args
+﻿namespace ManagementSystem.Domain.Models.Args
 {
     public class WorkTaskArgs
     {

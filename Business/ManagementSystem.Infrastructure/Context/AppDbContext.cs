@@ -76,11 +76,11 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasForeignKey(t => t.StatusId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Department>()
-                   .HasMany(d => d.Users) // Bir departmanın birçok kullanıcısı olabilir
-                   .WithOne(u => u.Department) // Bir kullanıcının sadece bir departmanı olabilir
-                   .HasForeignKey(u => u.Id) // Kullanıcının departmanı için foreign key'i belirtiyoruz
-                   .OnDelete(DeleteBehavior.Restrict); // Bir departman silindiğinde kullanıcıların departman bilgisini null olarak ayarla
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Department)
+                .WithMany(d => d.Users)
+                .HasForeignKey(u => u.DepartmentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }

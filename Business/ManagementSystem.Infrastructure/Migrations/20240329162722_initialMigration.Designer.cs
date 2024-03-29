@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240329124339_migration2")]
-    partial class migration2
+    [Migration("20240329162722_initialMigration")]
+    partial class initialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -189,7 +189,10 @@ namespace ManagementSystem.Infrastructure.Migrations
             modelBuilder.Entity("ManagementSystem.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -235,6 +238,8 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("User");
                 });
@@ -359,9 +364,8 @@ namespace ManagementSystem.Infrastructure.Migrations
                 {
                     b.HasOne("ManagementSystem.Domain.Entities.Department", "Department")
                         .WithMany("Users")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Department");
                 });

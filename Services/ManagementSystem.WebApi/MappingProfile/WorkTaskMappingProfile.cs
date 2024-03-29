@@ -1,4 +1,5 @@
-﻿using ManagementSystem.WebApi.Models.WorkTask.Response;
+﻿using ManagementSystem.Domain.Models.Dto;
+using ManagementSystem.WebApi.Models.WorkTask.Response;
 
 namespace ManagementSystem.WebApi.MappingProfile
 {
