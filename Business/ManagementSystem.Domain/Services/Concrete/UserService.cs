@@ -60,13 +60,13 @@ namespace ManagementSystem.Domain.Services.Concrete
             };
 
             var claims = new Claim[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, dbUser.Id.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, dbUser.Email),
-                new Claim(ClaimTypes.NameIdentifier, dbUser.UserName),
-                new Claim(ClaimTypes.NameIdentifier, dbUser.Name),
-                new Claim(ClaimTypes.NameIdentifier, dbUser.Email),
-            };
+                        {
+                new Claim("userId", dbUser.Id.ToString()),
+                new Claim("email", dbUser.Email),
+                new Claim("firstName", dbUser.Name),
+                new Claim("lastName", dbUser.LastName),
+                new Claim("username", dbUser.UserName)
+                        };
 
             model.Token = GenerateToken(claims);
 

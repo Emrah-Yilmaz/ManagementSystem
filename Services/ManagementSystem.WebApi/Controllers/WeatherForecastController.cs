@@ -1,11 +1,12 @@
-using Microsoft.AspNetCore.Authorization;
+using ManagementSystem.Domain.TokenHandler;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ManagementSystem.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController : AuthController
     {
         private static readonly string[] Summaries = new[]
         {
@@ -20,9 +21,10 @@ namespace ManagementSystem.WebApi.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        [Authorize]
         public IEnumerable<WeatherForecast> Get()
         {
+            var token = UserInfo();
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
@@ -30,6 +32,11 @@ namespace ManagementSystem.WebApi.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+        protected IEnumerable<Claim> UserInfo()
+        {
+            var principal = HttpContext.User.Claims;
+            return principal;
         }
     }
 }
