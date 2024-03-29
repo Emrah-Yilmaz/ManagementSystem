@@ -49,6 +49,8 @@ namespace ManagementSystem.Domain.Services.Concrete
             if (dbUser is null)
                 return null;
 
+
+
             var model = new LoginDto
             {
                 Id = dbUser.Id,
@@ -63,7 +65,7 @@ namespace ManagementSystem.Domain.Services.Concrete
                 new Claim(ClaimTypes.NameIdentifier, dbUser.Email),
                 new Claim(ClaimTypes.NameIdentifier, dbUser.UserName),
                 new Claim(ClaimTypes.NameIdentifier, dbUser.Name),
-                new Claim(ClaimTypes.NameIdentifier, dbUser.LastName),
+                new Claim(ClaimTypes.NameIdentifier, dbUser.Email),
             };
 
             model.Token = GenerateToken(claims);
