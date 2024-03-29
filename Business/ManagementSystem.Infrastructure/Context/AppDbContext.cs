@@ -17,19 +17,20 @@ namespace ManagementSystem.Infrastructure.Context
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<WorkTask> Tasks { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<Status> Statuses { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<WorkTask> Task { get; set; }
+        public DbSet<Comment> Comment { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
+        public DbSet<Status> Status { get; set; }
+        public DbSet<Department> Department { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement2; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -39,6 +40,48 @@ namespace ManagementSystem.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserRole>()
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Task)
+                .WithMany(t => t.Comments)
+                .HasForeignKey(c => c.TaskId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<WorkTask>()
+                .HasOne(t => t.Status)
+                .WithMany(s => s.Tasks)
+                .HasForeignKey(t => t.StatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Department>()
+                   .HasMany(d => d.Users) // Bir departmanın birçok kullanıcısı olabilir
+                   .WithOne(u => u.Department) // Bir kullanıcının sadece bir departmanı olabilir
+                   .HasForeignKey(u => u.Id) // Kullanıcının departmanı için foreign key'i belirtiyoruz
+                   .OnDelete(DeleteBehavior.Restrict); // Bir departman silindiğinde kullanıcıların departman bilgisini null olarak ayarla
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 

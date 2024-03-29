@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
 using ManagementSystem.Application.Features.Queries.WorkTask;
-using ManagementSystem.Domain.Entities;
-using ManagementSystem.Infrastructure.Context;
-using ManagementSystem.WebApi.Models.WorkTask.Request;
 using ManagementSystem.WebApi.Models.WorkTask.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace ManagementSystem.WebApi.Controllers
 {
@@ -29,7 +23,7 @@ namespace ManagementSystem.WebApi.Controllers
         [HttpGet()]
         [ProducesResponseType(typeof(List<WorkTasksResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> All([FromQuery] WorkTaskRequest request, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> All([FromQuery] GetWorkTasksQuery request, CancellationToken cancellationToken = default)
         {
             var query = new GetWorkTasksQuery
             {
