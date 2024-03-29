@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ManagementSystem.Domain.Entities;
+using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.Domain.Persistence;
 using ManagementSystem.Domain.Services.Abstract;
-using ManagementSystem.WebApi.Models.WorkTask.Response;
 using Microsoft.EntityFrameworkCore;
 
 namespace ManagementSystem.Domain.Services.Concrete

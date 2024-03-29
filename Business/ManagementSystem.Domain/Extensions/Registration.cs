@@ -9,6 +9,7 @@ namespace ManagementSystem.Domain.Extensions
         public static IServiceCollection AddDomainRegistration(this IServiceCollection services)
         {
             services.AddScoped<IWorkTaskService, WorkTaskService>();
+            services.AddScoped<IUserService, UserService>();
             return services;
         }
     }

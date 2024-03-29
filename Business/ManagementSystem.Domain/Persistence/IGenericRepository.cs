@@ -7,7 +7,7 @@ namespace ManagementSystem.Domain.Persistence
     {
         Task<TEntity> FindAsync(int id);
         Task<int> AddAsync(TEntity entity);
-        Task<int> AddAsync(IEnumerable<TEntity> entities);
+        Task<int> AddRangeAsync(IEnumerable<TEntity> entities);
         Task<int> UpdateAsync(TEntity entity);
         Task<int> DeleteAsync(int id);
         Task<int> DeleteAsync(TEntity identity);
@@ -22,7 +22,7 @@ namespace ManagementSystem.Domain.Persistence
         TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes);
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes);
         int Add(TEntity entity);
-        int Add(IEnumerable<TEntity> entities);
+        int AddRange(IEnumerable<TEntity> entities);
         int Update(TEntity entity);
         int Delete(int id);
         int Delete(TEntity identity);

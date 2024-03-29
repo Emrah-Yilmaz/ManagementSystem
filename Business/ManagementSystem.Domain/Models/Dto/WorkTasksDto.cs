@@ -1,4 +1,4 @@
-﻿namespace ManagementSystem.WebApi.Models.WorkTask.Response
+﻿namespace ManagementSystem.Domain.Models.Dto
 {
     public class WorkTasksDto
     {

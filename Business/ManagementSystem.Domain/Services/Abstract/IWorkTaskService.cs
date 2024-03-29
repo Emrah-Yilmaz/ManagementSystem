@@ -1,4 +1,4 @@
-﻿using ManagementSystem.WebApi.Models.WorkTask.Response;
+﻿using ManagementSystem.Domain.Models.Dto;
 
 namespace ManagementSystem.Domain.Services.Abstract
 {

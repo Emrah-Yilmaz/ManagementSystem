@@ -17,19 +17,20 @@ namespace ManagementSystem.Infrastructure.Context
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<WorkTask> Tasks { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<Status> Statuses { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<WorkTask> Task { get; set; }
+        public DbSet<Comment> Comment { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
+        public DbSet<Status> Status { get; set; }
+        public DbSet<Department> Department { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement2; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -39,11 +40,65 @@ namespace ManagementSystem.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserRole>()
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Task)
+                .WithMany(t => t.Comments)
+                .HasForeignKey(c => c.TaskId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<WorkTask>()
+                .HasOne(t => t.Status)
+                .WithMany(s => s.Tasks)
+                .HasForeignKey(t => t.StatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Department)
+                .WithMany(d => d.Users)
+                .HasForeignKey(u => u.DepartmentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         public override int SaveChanges()
         {
+            var datas = ChangeTracker.Entries<BaseEntity>();
+            foreach (var data in datas)
+            {
+                _ = data.State switch
+                {
+
+                    EntityState.Added => data.Entity.CreatedOn = DateTime.Now,
+                    EntityState.Modified => data.Entity.ModifiedOn = DateTime.Now,
+                    _ => DateTime.Now
+                };
+            }
+
             return base.SaveChanges();
         }
 
@@ -57,27 +112,23 @@ namespace ManagementSystem.Infrastructure.Context
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            return base.SaveChangesAsync(cancellationToken);
-        }
 
-        private void OnBeforeSave()
-        {
-            var addedEntities = ChangeTracker.Entries()
-                .Where(i => i.State == EntityState.Added)
-                .Select(i => (BaseEntity)i.Entity);
-
-            PrepareAddedEntities(addedEntities);
-        }
-
-        private void PrepareAddedEntities(IEnumerable<BaseEntity> entities)
-        {
-            foreach (var entity in entities)
+            //ChangeTracker: Entityler üzerinden yapılan değişikliklerin ya da yeni eklenen verinin yakalanmasını sağlayan propertydir.Update operasyonlarında Track edilen verileri yakalayıp elde etmemizi sağlar.
+            var datas = ChangeTracker.Entries<BaseEntity>();
+            foreach (var data in datas)
             {
-                if (entity.CreatedOn == DateTime.MinValue)
-                    entity.CreatedOn = DateTime.Now;
+                _ = data.State switch
+                {
+
+                    EntityState.Added => data.Entity.CreatedOn = DateTime.Now,
+                    EntityState.Modified => data.Entity.ModifiedOn = DateTime.Now,
+                    _ => DateTime.Now
+                };
             }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
     }
