@@ -31,6 +31,7 @@ namespace ManagementSystem.Domain.Services.Concrete
             var entity = _mapper.Map<User>(args);
             var hashedPass = Encrypt.Encript(args.PasswordHash);
             entity.PasswordHash = hashedPass;
+
             var result = await _userRepository.AddAsync(entity);
 
             return result;
