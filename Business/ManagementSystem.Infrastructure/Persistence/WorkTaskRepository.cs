@@ -16,7 +16,7 @@ namespace ManagementSystem.Infrastructure.Persistence
         public async Task<IList<WorkTask>> GetTasksWithUserAsync(CancellationToken cancellationTokeni = default)
         {
             var result = _context.Task
-                .Include(task => task.User)
+                .Include(task => task.AssignedUser)
                 .Include(status => status.Status)
                 .ToList();
             return result;

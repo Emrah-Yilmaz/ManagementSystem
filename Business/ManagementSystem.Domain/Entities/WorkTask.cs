@@ -9,8 +9,8 @@
         public int StatusId { get; set; }
         public virtual Status Status { get; set; }
 
-        public int UserId { get; set; }
-        public virtual User? User { get; set; }
+        public int AssignedUserId { get; set; }
+        public virtual User? AssignedUser { get; set; }
 
         public virtual ICollection<Comment>? Comments { get; set; }
 
