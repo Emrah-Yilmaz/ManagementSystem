@@ -21,7 +21,6 @@ namespace ManagementSystem.WebApi.Controllers
             _mapper = mapper;
         }
 
-
         [HttpPost("Login")]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
