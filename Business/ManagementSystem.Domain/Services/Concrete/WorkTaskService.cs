@@ -22,6 +22,7 @@ namespace ManagementSystem.Domain.Services.Concrete
         {
             var result = await _workTaskRepository.GetTasksWithUserAsync();
             var mappedResult = _mapper.Map<IList<WorkTasksDto>>(result);
+
             return mappedResult;
         }
     }
