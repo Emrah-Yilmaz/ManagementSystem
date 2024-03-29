@@ -44,7 +44,7 @@ namespace ManagementSystem.Domain.Services.Concrete
 
         public async Task<LoginDto> LoginAsync(LoginArgs args, CancellationToken cancellationToken = default)
         {
-           var dbUser = await _userRepository.SingleOrDefaultAsync(u => u.Email == args.Email);
+            var dbUser = await _userRepository.SingleOrDefaultAsync(u => u.Email == args.Email);
 
             if (dbUser is null)
                 return null;
@@ -60,13 +60,13 @@ namespace ManagementSystem.Domain.Services.Concrete
             };
 
             var claims = new Claim[]
-                        {
+            {
                 new Claim("userId", dbUser.Id.ToString()),
-                new Claim("email", dbUser.Email),
+                new Claim("mailAddress", dbUser.Email),
                 new Claim("firstName", dbUser.Name),
                 new Claim("lastName", dbUser.LastName),
                 new Claim("username", dbUser.UserName)
-                        };
+            };
 
             model.Token = GenerateToken(claims);
 

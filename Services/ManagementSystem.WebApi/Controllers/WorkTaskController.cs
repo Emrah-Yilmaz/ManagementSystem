@@ -8,7 +8,7 @@ namespace ManagementSystem.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WorkTaskController : ControllerBase
+    public class WorkTaskController : BaseController
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
@@ -31,6 +31,10 @@ namespace ManagementSystem.WebApi.Controllers
             };
             var result = await _mediator.Send(query, cancellationToken);
             var mappedResult = _mapper.Map<List<WorkTasksResponse>>(result);
+            if (mappedResult is null || mappedResult.Count == 0)
+            {
+                return NotFound("Bulunamadı");
+            }
             return Ok(mappedResult);
         }
     }

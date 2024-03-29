@@ -1,12 +1,10 @@
-using ManagementSystem.Domain.TokenHandler;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace ManagementSystem.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : AuthController
+    public class WeatherForecastController : BaseController
     {
         private static readonly string[] Summaries = new[]
         {
@@ -23,7 +21,11 @@ namespace ManagementSystem.WebApi.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-            var token = UserInfo();
+            var token = ReadJwtToken();
+
+            var userId = token.Id;
+            var username = token.Name;
+
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -32,11 +34,6 @@ namespace ManagementSystem.WebApi.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
-        }
-        protected IEnumerable<Claim> UserInfo()
-        {
-            var principal = HttpContext.User.Claims;
-            return principal;
         }
     }
 }

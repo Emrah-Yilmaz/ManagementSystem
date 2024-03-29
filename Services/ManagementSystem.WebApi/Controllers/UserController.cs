@@ -19,7 +19,6 @@ namespace ManagementSystem.WebApi.Controllers
             _mapper = mapper;
         }
 
-
         [HttpPost()]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -33,22 +32,6 @@ namespace ManagementSystem.WebApi.Controllers
             }
 
             return Ok(result);
-        }
-
-
-        [HttpPost("Login")]
-        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Login([FromBody] LoginUserCommand command, CancellationToken cancellationToken = default)
-        {
-            var result = await _mediator.Send(command);
-            var mappedResult = _mapper.Map<LoginResponse>(result);
-            if (mappedResult is null)
-            {
-                return NotFound("Kullanıcı Bulunamadı");
-            }
-
-            return Ok(mappedResult);
         }
     }
 }
