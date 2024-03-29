@@ -152,7 +152,7 @@ namespace ManagementSystem.Infrastructure.Persistence
             return _dbContext.SaveChanges();
         }
 
-        public virtual int Add(IEnumerable<TEntity> entities)
+        public virtual int AddRange(IEnumerable<TEntity> entities)
         {
             this.entity.AddRange(entities);
             return _dbContext.SaveChanges();
@@ -161,10 +161,11 @@ namespace ManagementSystem.Infrastructure.Persistence
         public virtual async Task<int> AddAsync(TEntity entity)
         {
             await this.entity.AddAsync(entity);
-            return await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
+            return entity.Id;
         }
 
-        public virtual async Task<int> AddAsync(IEnumerable<TEntity> entities)
+        public virtual async Task<int> AddRangeAsync(IEnumerable<TEntity> entities)
         {
             await this.entity.AddRangeAsync(entities);
             return await _dbContext.SaveChangesAsync();
@@ -188,7 +189,7 @@ namespace ManagementSystem.Infrastructure.Persistence
             return await _dbContext.SaveChangesAsync();
         }
         #endregion
-
+         
         #region AddOrUpdate Methods
         public virtual int AddOrUpdate(TEntity entity)
         {

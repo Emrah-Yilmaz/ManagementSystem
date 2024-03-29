@@ -28,14 +28,14 @@ namespace ManagementSystem.Domain.Services.Concrete
 
         public async Task<int> CreateAsync(CreateUserArgs args, CancellationToken cancellationToken = default)
         {
-            //var entity = _mapper.Map<User>(args);
-            var entity = new User
-            {
-                Name = args.Name,
-                LastName = args.LastName,
-                UserName = args.UserName,
-                Email = args.Email
-            };
+            var entity = _mapper.Map<User>(args);
+            //var entity = new User
+            //{
+            //    Name = args.Name,
+            //    LastName = args.LastName,
+            //    UserName = args.UserName,
+            //    Email = args.Email
+            //};
             var hashedPass = Encrypt.Encript(args.PasswordHash);
             entity.PasswordHash = hashedPass;
             var result = await _userRepository.AddAsync(entity);

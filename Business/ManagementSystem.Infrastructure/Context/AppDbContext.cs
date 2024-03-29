@@ -87,6 +87,18 @@ namespace ManagementSystem.Infrastructure.Context
 
         public override int SaveChanges()
         {
+            var datas = ChangeTracker.Entries<BaseEntity>();
+            foreach (var data in datas)
+            {
+                _ = data.State switch
+                {
+
+                    EntityState.Added => data.Entity.CreatedOn = DateTime.Now,
+                    EntityState.Modified => data.Entity.ModifiedOn = DateTime.Now,
+                    _ => DateTime.Now
+                };
+            }
+
             return base.SaveChanges();
         }
 
@@ -100,27 +112,23 @@ namespace ManagementSystem.Infrastructure.Context
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            return base.SaveChangesAsync(cancellationToken);
-        }
 
-        private void OnBeforeSave()
-        {
-            var addedEntities = ChangeTracker.Entries()
-                .Where(i => i.State == EntityState.Added)
-                .Select(i => (BaseEntity)i.Entity);
-
-            PrepareAddedEntities(addedEntities);
-        }
-
-        private void PrepareAddedEntities(IEnumerable<BaseEntity> entities)
-        {
-            foreach (var entity in entities)
+            //ChangeTracker: Entityler üzerinden yapılan değişikliklerin ya da yeni eklenen verinin yakalanmasını sağlayan propertydir.Update operasyonlarında Track edilen verileri yakalayıp elde etmemizi sağlar.
+            var datas = ChangeTracker.Entries<BaseEntity>();
+            foreach (var data in datas)
             {
-                if (entity.CreatedOn == DateTime.MinValue)
-                    entity.CreatedOn = DateTime.Now;
+                _ = data.State switch
+                {
+
+                    EntityState.Added => data.Entity.CreatedOn = DateTime.Now,
+                    EntityState.Modified => data.Entity.ModifiedOn = DateTime.Now,
+                    _ => DateTime.Now
+                };
             }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
     }

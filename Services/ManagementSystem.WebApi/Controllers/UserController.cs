@@ -21,18 +21,18 @@ namespace ManagementSystem.WebApi.Controllers
 
 
         [HttpPost()]
-        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(command);
-            var mappedResult = _mapper.Map<LoginResponse>(result);
-            if (mappedResult is null)
+
+            if (result <= 0)
             {
                 return BadRequest();
             }
 
-            return Ok(mappedResult);
+            return Ok(result);
         }
 
 
