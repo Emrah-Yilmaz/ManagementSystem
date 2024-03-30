@@ -26,11 +26,7 @@ namespace ManagementSystem.Domain.Services.Concrete
         public async Task<int> CreateAsync(CreateDepartmentArgs args, CancellationToken cancellationToken = default)
         {
             var mappedEntity = _mapper.Map<Department>(args);
-            mappedEntity.CreatedById = _domainPrincipal.GetClaims().Id;
-            mappedEntity.CreatedBy = string.Concat(_domainPrincipal.GetClaims().Name + " " + _domainPrincipal.GetClaims().LastName);
-
             var result = await _repository.AddAsync(mappedEntity);
-
             return result;
         }
 
@@ -55,7 +51,6 @@ namespace ManagementSystem.Domain.Services.Concrete
                     ( (Expression<Func<Department, string>>) (x => x.ModifiedBy), args.ModifiedBy)
                 };
             var result = await _repository.SearchAsync(searchTerms);
-
             var mappedResult = _mapper.Map<IList<DepartmentDto>>(result);
             return mappedResult;
         }
@@ -71,9 +66,7 @@ namespace ManagementSystem.Domain.Services.Concrete
             entity.Name = args.Name;
             entity.ModifiedById = _domainPrincipal.GetClaims().Id;
             entity.ModifiedBy = string.Concat(_domainPrincipal.GetClaims().Name + " " + _domainPrincipal.GetClaims().LastName);
-
             var result = await _repository.UpdateAsync(entity);
-
             return result;
         }
     }
