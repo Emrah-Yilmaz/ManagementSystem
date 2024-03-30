@@ -2,7 +2,7 @@
 using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.WebApi.Models.User;
 
-namespace ManagementSystem.WebApi.MappingProfile
+namespace ManagementSystem.WebApi.MappingProfile.User
 {
     public class UserMappingProfile : AutoMapper.Profile
     {

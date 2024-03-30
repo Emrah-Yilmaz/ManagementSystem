@@ -1,4 +1,5 @@
 ﻿using ManagementSystem.Domain.Entities;
+using ManagementSystem.Domain.TokenHandler;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -10,7 +11,6 @@ namespace ManagementSystem.Infrastructure.Context
 
         public AppDbContext()
         {
-
         }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -85,21 +85,20 @@ namespace ManagementSystem.Infrastructure.Context
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
-        public override int SaveChanges()
+        public override  int SaveChanges()
         {
             var datas = ChangeTracker.Entries<BaseEntity>();
             foreach (var data in datas)
             {
                 _ = data.State switch
                 {
-
                     EntityState.Added => data.Entity.CreatedOn = DateTime.Now,
                     EntityState.Modified => data.Entity.ModifiedOn = DateTime.Now,
                     _ => DateTime.Now
                 };
             }
 
-            return base.SaveChanges();
+            return  base.SaveChanges();
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
