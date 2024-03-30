@@ -1,6 +1,9 @@
 ﻿using ManagementSystem.Domain.Entities;
+using ManagementSystem.Domain.Models.Args.Department;
 using ManagementSystem.Domain.Persistence;
 using ManagementSystem.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ManagementSystem.Infrastructure.Persistence
 {
@@ -9,5 +12,7 @@ namespace ManagementSystem.Infrastructure.Persistence
         public DeparmentRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
+
+
     }
 }

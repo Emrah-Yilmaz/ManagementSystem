@@ -2,10 +2,11 @@
 
 namespace ManagementSystem.Application.Features.Commands.Department
 {
-    public class CreateDepartmentCommandValidator : AbstractValidator<CreateDepartmentCommand>
+    public class UpdateDepartmentCommandValidator : AbstractValidator<UpdateDepartmentCommand>
     {
-        public CreateDepartmentCommandValidator()
+        public UpdateDepartmentCommandValidator()
         {
+            RuleFor(p => p.Id).GreaterThan(0);
             RuleFor(p => p.Name).NotNull().MaximumLength(200);
         }
     }

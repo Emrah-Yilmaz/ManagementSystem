@@ -1,4 +1,5 @@
 ﻿using ManagementSystem.Domain.Models.Args.Department;
+using ManagementSystem.Domain.Models.Dto;
 
 namespace ManagementSystem.Domain.MappingProfile.Department
 {
@@ -7,6 +8,7 @@ namespace ManagementSystem.Domain.MappingProfile.Department
         public DepartmentMappingProfile()
         {
             CreateMap<CreateDepartmentArgs, Domain.Entities.Department>();
+            CreateMap<Domain.Entities.Department, DepartmentDto>();
         }
     }
 }

@@ -4,6 +4,7 @@
     {
         public DepartmentMappingProfile()
         {
+
         }
     }
 }
