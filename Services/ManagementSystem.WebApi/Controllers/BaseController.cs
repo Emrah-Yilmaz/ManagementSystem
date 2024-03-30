@@ -1,4 +1,5 @@
 ﻿using ManagementSystem.Domain.Models;
+using ManagementSystem.Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,11 +23,11 @@ namespace ManagementSystem.WebApi.Controllers
 
             var model = new DomainPrincipalModel
             {
-                Id = Convert.ToInt32(tokenInfo["userId"]),
-                Name = tokenInfo["firstName"],
-                LastName = tokenInfo["lastName"],
-                UserName = tokenInfo["username"],
-                Email = tokenInfo["mailAddress"]
+                Id = Convert.ToInt32(tokenInfo[Shared.JwtClaims.UserId]),
+                Name = tokenInfo[Shared.JwtClaims.FirstName],
+                LastName = tokenInfo[Shared.JwtClaims.LastName],
+                UserName = tokenInfo[Shared.JwtClaims.UserName],
+                Email = tokenInfo[Shared.JwtClaims.Email]
             };
 
             return model;

@@ -5,6 +5,7 @@ using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.Domain.PasswordEncryptor;
 using ManagementSystem.Domain.Persistence;
 using ManagementSystem.Domain.Services.Abstract;
+using ManagementSystem.Domain.Utilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -32,6 +33,9 @@ namespace ManagementSystem.Domain.Services.Concrete
             var hashedPass = Encrypt.Encript(args.PasswordHash);
             entity.PasswordHash = hashedPass;
             var result = await _userRepository.AddAsync(entity);
+   
+            //Todo
+            //RabbitMQ implementasyonu sonrasında Doğrulama maili gönderilecek
 
             return result;
         }
@@ -39,9 +43,15 @@ namespace ManagementSystem.Domain.Services.Concrete
         public async Task<LoginDto> LoginAsync(LoginArgs args, CancellationToken cancellationToken = default)
         {
             var dbUser = await _userRepository.SingleOrDefaultAsync(u => u.Email == args.Email);
-
             if (dbUser is null)
                 return null;
+
+            var hashedPass = Encrypt.Encript(args.Password);
+            var isExistPass = dbUser.PasswordHash == hashedPass;
+            if (!isExistPass)
+            {
+                throw new Exception("Kullanıcı adı ya da parola hatalı");
+            }
 
             var model = new LoginDto
             {
@@ -53,11 +63,11 @@ namespace ManagementSystem.Domain.Services.Concrete
 
             var claims = new Claim[]
             {
-                new Claim("userId", dbUser.Id.ToString()),
-                new Claim("mailAddress", dbUser.Email),
-                new Claim("firstName", dbUser.Name),
-                new Claim("lastName", dbUser.LastName),
-                new Claim("username", dbUser.UserName)
+                new Claim(Shared.JwtClaims.UserId, dbUser.Id.ToString()),
+                new Claim(Shared.JwtClaims.Email, dbUser.Email),
+                new Claim(Shared.JwtClaims.FirstName, dbUser.Name),
+                new Claim(Shared.JwtClaims.LastName, dbUser.LastName),
+                new Claim(Shared.JwtClaims.UserName, dbUser.UserName)
             };
 
             model.Token = GenerateToken(claims);
