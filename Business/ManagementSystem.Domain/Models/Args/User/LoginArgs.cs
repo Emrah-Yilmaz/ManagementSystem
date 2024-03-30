@@ -1,4 +1,4 @@
-﻿namespace ManagementSystem.Domain.Models.Args
+﻿namespace ManagementSystem.Domain.Models.Args.User
 {
     public class LoginArgs
     {

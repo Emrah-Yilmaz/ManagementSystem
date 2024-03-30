@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ManagementSystem.Domain.Entities;
-using ManagementSystem.Domain.Models.Args;
+using ManagementSystem.Domain.Models.Args.User;
 using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.Domain.PasswordEncryptor;
 using ManagementSystem.Domain.Persistence;

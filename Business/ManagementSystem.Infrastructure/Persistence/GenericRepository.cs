@@ -185,8 +185,8 @@ namespace ManagementSystem.Infrastructure.Persistence
         {
             this.entity.Attach(entity);
             _dbContext.Entry(entity).State = EntityState.Modified;
-
-            return await _dbContext.SaveChangesAsync();
+             await _dbContext.SaveChangesAsync();
+            return entity.Id;
         }
         #endregion
          
@@ -277,6 +277,37 @@ namespace ManagementSystem.Infrastructure.Persistence
         public int Delete(TEntity identity)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<TEntity>> SearchAsync(params (Expression<Func<TEntity, string>> property, string searchTerm)[] searchTerms)
+        {
+            IQueryable<TEntity> query = _dbContext.Set<TEntity>();
+
+            foreach (var (property, searchTerm) in searchTerms)
+            {
+                if (property != null && !string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    query = query.Where(GetContainsExpression(property, searchTerm));
+                }
+            }
+
+            return await query.ToListAsync();
+        }
+
+        private Expression<Func<TEntity, bool>> GetContainsExpression(Expression<Func<TEntity, string>> property, string searchTerm)
+        {
+            var memberExpression = property.Body as MemberExpression;
+            if (memberExpression == null)
+            {
+                throw new ArgumentException("Invalid property expression", nameof(property));
+            }
+
+            var parameter = property.Parameters.Single();
+            var propertyAccess = Expression.Property(parameter, memberExpression.Member.Name.ToString());
+            var searchTermExpression = Expression.Constant(searchTerm.ToLower());
+            var containsExpression = Expression.Call(propertyAccess, "Contains", Type.EmptyTypes, searchTermExpression);
+
+            return Expression.Lambda<Func<TEntity, bool>>(containsExpression, parameter);
         }
     }
 }

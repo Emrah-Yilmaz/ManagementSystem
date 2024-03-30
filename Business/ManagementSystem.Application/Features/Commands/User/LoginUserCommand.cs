@@ -1,4 +1,4 @@
-﻿using ManagementSystem.Domain.Models.Args;
+﻿using ManagementSystem.Domain.Models.Args.User;
 using ManagementSystem.Domain.Models.Dto;
 using MediatR;
 

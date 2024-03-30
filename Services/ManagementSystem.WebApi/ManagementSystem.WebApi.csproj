@@ -26,4 +26,8 @@
     <ProjectReference Include="..\..\Business\ManagementSystem.Infrastructure\ManagementSystem.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Department\Resposne\" />
+  </ItemGroup>
+
 </Project>

@@ -9,6 +9,7 @@
             public const string LastName = "LastName";
             public const string UserName = "UserName";
             public const string Email = "Email";
+            public const string Unknown = "Unknown";
         }
     }
 }
