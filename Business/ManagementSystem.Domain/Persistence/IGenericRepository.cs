@@ -31,5 +31,8 @@ namespace ManagementSystem.Domain.Persistence
         int SaveChange();
         Task<int> SaveChangeAsync();
         IQueryable<TEntity> AsQueryable();
+        Task<List<TEntity>> SearchAsync(params (Expression<Func<TEntity, string>> property, string searchTerm)[] searchTerms);
+
+
     }
 }

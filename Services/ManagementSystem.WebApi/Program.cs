@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using ManagementSystem.Application.Extensions;
 using ManagementSystem.Domain.Extensions;
 using ManagementSystem.Infrastructure.Extensions;
@@ -11,7 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddFluentValidation();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplicationRegistration();

@@ -21,9 +21,11 @@ namespace ManagementSystem.Infrastructure.Extensions
                 });
             });
 
+            services.AddScoped<DbContext, AppDbContext>();
             services.AddScoped<IWorkTaskRepository, WorkTaskRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<DbContext, AppDbContext>();
+            services.AddScoped<IDepartmentRepository, DeparmentRepository>();
+            
 
             return services;
         }

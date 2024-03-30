@@ -275,6 +275,9 @@ namespace ManagementSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AssignedUserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -310,16 +313,13 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignedUserId");
 
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("StatusId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Task");
                 });
@@ -374,6 +374,12 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.WorkTask", b =>
                 {
+                    b.HasOne("ManagementSystem.Domain.Entities.User", "AssignedUser")
+                        .WithMany("WorkTasks")
+                        .HasForeignKey("AssignedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ManagementSystem.Domain.Entities.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
@@ -386,17 +392,11 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ManagementSystem.Domain.Entities.User", "User")
-                        .WithMany("WorkTasks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("AssignedUser");
 
                     b.Navigation("Department");
 
                     b.Navigation("Status");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Department", b =>
