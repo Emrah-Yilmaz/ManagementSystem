@@ -1,5 +1,4 @@
 ﻿using ManagementSystem.Domain.Entities;
-using ManagementSystem.Domain.TokenHandler;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -30,7 +29,7 @@ namespace ManagementSystem.Infrastructure.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement2; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=RD_COYE;database=ProjectManagement; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -69,12 +68,16 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasForeignKey(c => c.TaskId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             modelBuilder.Entity<WorkTask>()
                 .HasOne(t => t.Status)
                 .WithMany(s => s.Tasks)
                 .HasForeignKey(t => t.StatusId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WorkTask>()
+                .HasMany(wt => wt.Comments)
+                .WithOne(c => c.Task)
+                .HasForeignKey(c => c.TaskId);
 
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Department)
@@ -85,7 +88,7 @@ namespace ManagementSystem.Infrastructure.Context
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
-        public override  int SaveChanges()
+        public override int SaveChanges()
         {
             var datas = ChangeTracker.Entries<BaseEntity>();
             foreach (var data in datas)
@@ -98,7 +101,7 @@ namespace ManagementSystem.Infrastructure.Context
                 };
             }
 
-            return  base.SaveChanges();
+            return base.SaveChanges();
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

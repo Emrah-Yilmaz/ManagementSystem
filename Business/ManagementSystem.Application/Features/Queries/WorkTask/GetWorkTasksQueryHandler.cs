@@ -10,12 +10,12 @@ namespace ManagementSystem.Application.Features.Queries.WorkTask
 
         public GetWorkTasksQueryHandler(IWorkTaskService workTaskService)
         {
-           _workTaskService = workTaskService;
+            _workTaskService = workTaskService;
         }
 
         public async Task<IList<WorkTasksDto>> Handle(GetWorkTasksQuery request, CancellationToken cancellationToken)
         {
-            var result = await _workTaskService.GetTasksWithUserAsync(cancellationToken);
+            var result = await _workTaskService.GetWorkTasksAsync(request, cancellationToken);
             return result;
         }
     }
