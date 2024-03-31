@@ -67,13 +67,8 @@ namespace ManagementSystem.Domain.Services.Concrete
             {
                 return 0;
             }
-
             entity.Name = args.Name;
-            entity.ModifiedById = _domainPrincipal.GetClaims().Id;
-            entity.ModifiedBy = string.Concat(_domainPrincipal.GetClaims().Name + " " + _domainPrincipal.GetClaims().LastName);
-
             var result = await _repository.UpdateAsync(entity);
-
             return result;
         }
     }

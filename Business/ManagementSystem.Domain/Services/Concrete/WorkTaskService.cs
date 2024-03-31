@@ -94,14 +94,13 @@ namespace ManagementSystem.Domain.Services.Concrete
 
         public async Task<WorkTasksDto> GetWorkTaskAsync(GetWorkTaskArgs args, CancellationToken cancellationToken = default)
         {
-            var result = await _workTaskRepository.GetByIdAsync(args.Id, true, x => x.Department, y => y.Status, z => z.AssignedUser, w => w.Comments);
+            var entity =  _workTaskRepository.Get(p => p.Id == args.Id, true, x => x.Department, y => y.Status, z => z.AssignedUser, w => w.Comments);
 
-            if (result is null)
+            if (entity is null)
             {
                 return null;
             }
-
-            var mappedResult = _mapper.Map<WorkTasksDto>(result);
+            var mappedResult = _mapper.Map<WorkTasksDto>(entity.FirstOrDefault());
             return mappedResult;
         }
     }

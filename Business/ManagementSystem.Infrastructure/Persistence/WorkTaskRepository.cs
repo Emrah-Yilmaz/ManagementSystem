@@ -14,12 +14,13 @@ namespace ManagementSystem.Infrastructure.Persistence
             _context = dbContext;
         }
 
-        public async Task<IList<WorkTask>> GetTasksWithUserAsync(GetWorkTasksArgs args,CancellationToken cancellationTokeni = default)
+        public async Task<WorkTask> GetTasksWithUserAsync(GetWorkTasksArgs args,CancellationToken cancellationTokeni = default)
         {
             IQueryable<WorkTask> query = _context.Task
                 .Include(task => task.AssignedUser)
                 .Include(status => status.Status)
-                .Include(department => department.Department);
+                .Include(department => department.Department)
+                .Include(comments => comments.Comments);
 
             if (!string.IsNullOrEmpty(args.Title))
             {
@@ -56,7 +57,7 @@ namespace ManagementSystem.Infrastructure.Persistence
                 query = query.Where(t => t.ModifiedBy.Contains(args.ModifiedBy));
             }
 
-            return await query.ToListAsync();
+            return await query.FirstOrDefaultAsync();
         }
     }
 }
