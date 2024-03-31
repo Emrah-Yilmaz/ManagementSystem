@@ -7,13 +7,15 @@ namespace ManagementSystem.Infrastructure.Context
     public class AppDbContext : DbContext
     {
         public const string DEFAULT_SCHEMA = "dbo";
+        private readonly IDomainPrincipal _domainPrincipal;
 
         public AppDbContext()
         {
         }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IDomainPrincipal domainPrincipal) : base(options)
         {
+            _domainPrincipal = domainPrincipal;
         }
 
         public DbSet<User> User { get; set; }
@@ -91,14 +93,21 @@ namespace ManagementSystem.Infrastructure.Context
         public override int SaveChanges()
         {
             var datas = ChangeTracker.Entries<BaseEntity>();
+            var claims = _domainPrincipal.GetClaims();
             foreach (var data in datas)
             {
-                _ = data.State switch
+                if (data.State == EntityState.Added)
                 {
-                    EntityState.Added => data.Entity.CreatedOn = DateTime.Now,
-                    EntityState.Modified => data.Entity.ModifiedOn = DateTime.Now,
-                    _ => DateTime.Now
-                };
+                    data.Entity.CreatedOn = DateTime.Now;
+                    data.Entity.CreatedBy = string.Concat(claims.Name + " " + claims.LastName);
+                    data.Entity.CreatedById = claims.Id;
+                }
+                else if (data.State == EntityState.Modified)
+                {
+                    data.Entity.ModifiedOn = DateTime.Now;
+                    data.Entity.ModifiedBy = string.Concat(claims.Name + " " + claims.LastName);
+                    data.Entity.ModifiedById = claims.Id;
+                }
             }
 
             return base.SaveChanges();
@@ -117,17 +126,22 @@ namespace ManagementSystem.Infrastructure.Context
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
 
-            //ChangeTracker: Entityler üzerinden yapılan değişikliklerin ya da yeni eklenen verinin yakalanmasını sağlayan propertydir.Update operasyonlarında Track edilen verileri yakalayıp elde etmemizi sağlar.
             var datas = ChangeTracker.Entries<BaseEntity>();
+            var claims = _domainPrincipal.GetClaims();
             foreach (var data in datas)
             {
-                _ = data.State switch
+                if (data.State == EntityState.Added)
                 {
-
-                    EntityState.Added => data.Entity.CreatedOn = DateTime.Now,
-                    EntityState.Modified => data.Entity.ModifiedOn = DateTime.Now,
-                    _ => DateTime.Now
-                };
+                    data.Entity.CreatedOn = DateTime.Now;
+                    data.Entity.CreatedBy = string.Concat(claims.Name + " " + claims.LastName);
+                    data.Entity.CreatedById = claims.Id;
+                }
+                else if (data.State == EntityState.Modified)
+                {
+                    data.Entity.ModifiedOn = DateTime.Now;
+                    data.Entity.ModifiedBy = string.Concat(claims.Name + " " + claims.LastName);
+                    data.Entity.ModifiedById = claims.Id;
+                }
             }
 
             return await base.SaveChangesAsync(cancellationToken);
