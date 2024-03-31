@@ -1,5 +1,4 @@
 ﻿using ManagementSystem.Domain.Entities;
-using ManagementSystem.Domain.TokenHandler;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -71,7 +70,6 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasForeignKey(c => c.TaskId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             modelBuilder.Entity<WorkTask>()
                 .HasOne(t => t.Status)
                 .WithMany(s => s.Tasks)
@@ -83,6 +81,11 @@ namespace ManagementSystem.Infrastructure.Context
                 .WithMany(d => d.Users)
                 .HasForeignKey(u => u.DepartmentId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WorkTask>()
+             .HasMany(wt => wt.Comments)
+             .WithOne(c => c.Task)
+             .HasForeignKey(c => c.TaskId);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }

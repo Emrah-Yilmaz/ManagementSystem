@@ -4,8 +4,7 @@ using MediatR;
 
 namespace ManagementSystem.Application.Features.Queries.WorkTask
 {
-    public class GetWorkTasksQuery : GetWorkTasksArgs, IRequest<IList<WorkTasksDto>>
+    public class GetWorkTaskQuery : GetWorkTaskArgs, IRequest<WorkTasksDto>
     {
-
     }
 }

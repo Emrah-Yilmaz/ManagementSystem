@@ -1,12 +1,14 @@
-﻿namespace ManagementSystem.WebApi.Models.WorkTask.Response
+﻿using ManagementSystem.WebApi.Models.Comment;
+
+namespace ManagementSystem.WebApi.Models.WorkTask.Response
 {
-    public class WorkTasksResponse
+    public class WorkTasksResponse : BaseResponse
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? Deadline { get; set; }
         public string Status { get; set; }
-        public string NameSurname { get; set; }
+        public string AssignedUser { get; set; }
+        public ICollection<CommentResponse> Comments { get; set; }
     }
 }

@@ -49,7 +49,7 @@ namespace ManagementSystem.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("/{Id}")]
+        [HttpGet("{Id}")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
