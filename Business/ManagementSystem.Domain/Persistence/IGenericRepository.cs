@@ -6,9 +6,9 @@ namespace ManagementSystem.Domain.Persistence
     public interface IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         Task<TEntity> FindAsync(int id);
-        Task<int> AddAsync(TEntity entity);
+        Task<int> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task<int> AddRangeAsync(IEnumerable<TEntity> entities);
-        Task<int> UpdateAsync(TEntity entity);
+        Task<int> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task<int> DeleteAsync(int id);
         Task<int> DeleteAsync(TEntity identity);
         Task<bool> DeleteRangeAsync(Expression<Func<TEntity, bool>> predicate);

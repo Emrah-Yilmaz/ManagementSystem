@@ -1,4 +1,4 @@
-﻿using ManagementSystem.WebApi.Models.Comment;
+﻿using ManagementSystem.WebApi.Models.Comment.Response;
 
 namespace ManagementSystem.WebApi.Models.WorkTask.Response
 {
@@ -9,6 +9,6 @@ namespace ManagementSystem.WebApi.Models.WorkTask.Response
         public DateTime? Deadline { get; set; }
         public string Status { get; set; }
         public string AssignedUser { get; set; }
-        public ICollection<CommentResponse> Comments { get; set; }
+        public ICollection<GetCommentResponse> Comments { get; set; }
     }
 }

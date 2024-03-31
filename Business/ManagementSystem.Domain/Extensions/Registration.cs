@@ -1,5 +1,11 @@
-﻿using ManagementSystem.Domain.Services.Abstract;
-using ManagementSystem.Domain.Services.Concrete;
+﻿using ManagementSystem.Domain.Services.Abstract.Comment;
+using ManagementSystem.Domain.Services.Abstract.Department;
+using ManagementSystem.Domain.Services.Abstract.User;
+using ManagementSystem.Domain.Services.Abstract.WorkTask;
+using ManagementSystem.Domain.Services.Concrete.Comment;
+using ManagementSystem.Domain.Services.Concrete.Department;
+using ManagementSystem.Domain.Services.Concrete.User;
+using ManagementSystem.Domain.Services.Concrete.WorkTask;
 using ManagementSystem.Domain.TokenHandler;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +19,7 @@ namespace ManagementSystem.Domain.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IDomainPrincipal, DomainPrincipal>();
+            services.AddScoped<ICommentService, CommentService>();
             return services;
         }
     }
