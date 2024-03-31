@@ -158,7 +158,7 @@ namespace ManagementSystem.Infrastructure.Persistence
             return _dbContext.SaveChanges();
         }
 
-        public virtual async Task<int> AddAsync(TEntity entity)
+        public virtual async Task<int> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             await this.entity.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
@@ -181,7 +181,7 @@ namespace ManagementSystem.Infrastructure.Persistence
             return _dbContext.SaveChanges();
         }
 
-        public async Task<int> UpdateAsync(TEntity entity)
+        public async Task<int> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             this.entity.Attach(entity);
             _dbContext.Entry(entity).State = EntityState.Modified;

@@ -52,6 +52,10 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("StatusId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("TaskId")
                         .HasColumnType("int");
 
@@ -59,6 +63,9 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StatusId")
+                        .IsUnique();
 
                     b.HasIndex("TaskId");
 
@@ -139,11 +146,8 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Status", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -154,6 +158,9 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -163,11 +170,7 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.ToTable("Status");
                 });
@@ -303,8 +306,8 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
+                    b.Property<string>("StatusId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -323,17 +326,25 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Comment", b =>
                 {
+                    b.HasOne("ManagementSystem.Domain.Entities.Status", "Status")
+                        .WithOne("Comment")
+                        .HasForeignKey("ManagementSystem.Domain.Entities.Comment", "StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ManagementSystem.Domain.Entities.WorkTask", "Task")
                         .WithMany("Comments")
                         .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ManagementSystem.Domain.Entities.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Status");
 
                     b.Navigation("Task");
 
@@ -345,7 +356,7 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.HasOne("ManagementSystem.Domain.Entities.Department", "Department")
                         .WithMany("Users")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Department");
                 });
@@ -355,13 +366,13 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.HasOne("ManagementSystem.Domain.Entities.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ManagementSystem.Domain.Entities.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Role");
@@ -386,8 +397,7 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.HasOne("ManagementSystem.Domain.Entities.Status", "Status")
                         .WithMany("Tasks")
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("AssignedUser");
 
@@ -408,6 +418,8 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Status", b =>
                 {
+                    b.Navigation("Comment");
+
                     b.Navigation("Tasks");
                 });
 

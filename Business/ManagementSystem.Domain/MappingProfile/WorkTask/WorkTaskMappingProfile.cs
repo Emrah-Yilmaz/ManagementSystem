@@ -18,7 +18,7 @@ namespace ManagementSystem.Domain.MappingProfile.WorkTask
              .ForMember(destination => destination.Department, operation => operation.MapFrom(source => source.Department.Name))
              .ForMember(destination => destination.Comments, operation => operation.MapFrom(source => source.Comments));
 
-            CreateMap<Comment, CommentsDto>();
+            CreateMap<Domain.Entities.Comment, GetCommentDto>();
         }
     }
 }

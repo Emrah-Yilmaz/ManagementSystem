@@ -2,6 +2,8 @@
 using ManagementSystem.Domain.TokenHandler;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 
 namespace ManagementSystem.Infrastructure.Context
 {
@@ -32,7 +34,7 @@ namespace ManagementSystem.Infrastructure.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement2; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement3; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -51,42 +53,48 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.UserRoles)
                 .HasForeignKey(ur => ur.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.User)
                 .WithMany(u => u.Comments)
                 .HasForeignKey(c => c.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Task)
                 .WithMany(t => t.Comments)
                 .HasForeignKey(c => c.TaskId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<WorkTask>()
                 .HasOne(t => t.Status)
                 .WithMany(s => s.Tasks)
                 .HasForeignKey(t => t.StatusId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Department)
                 .WithMany(d => d.Users)
                 .HasForeignKey(u => u.DepartmentId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<WorkTask>()
-             .HasMany(wt => wt.Comments)
-             .WithOne(c => c.Task)
-             .HasForeignKey(c => c.TaskId);
+                .HasMany(wt => wt.Comments)
+                .WithOne(c => c.Task)
+                .HasForeignKey(c => c.TaskId);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(e => e.Status)
+                .WithOne(e => e.Comment)
+                .HasForeignKey<Comment>(e => e.StatusId)
+                .IsRequired();
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }

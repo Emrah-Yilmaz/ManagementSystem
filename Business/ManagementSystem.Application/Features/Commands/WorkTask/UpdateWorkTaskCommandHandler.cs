@@ -1,4 +1,4 @@
-﻿using ManagementSystem.Domain.Services.Abstract;
+﻿using ManagementSystem.Domain.Services.Abstract.WorkTask;
 using MediatR;
 
 namespace ManagementSystem.Application.Features.Commands.WorkTask
