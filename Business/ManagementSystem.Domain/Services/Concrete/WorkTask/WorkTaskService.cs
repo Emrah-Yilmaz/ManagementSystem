@@ -51,7 +51,7 @@ namespace ManagementSystem.Domain.Services.Concrete.WorkTask
 
         public async Task<IList<WorkTasksDto>> GetWorkTasksAsync(GetWorkTasksArgs args, CancellationToken cancellationToken = default)
         {
-            var result = await _workTaskRepository.GetList(p => p.Id > 0, false, null, x => x.Department, y => y.Status, z => z.AssignedUser, w => w.Comments);
+            var result = await _workTaskRepository.GetList(p => p.Id > 0, false, null, x => x.Department, z => z.AssignedUser, w => w.Comments);
 
             if (!string.IsNullOrEmpty(args.Title))
             {
@@ -70,7 +70,7 @@ namespace ManagementSystem.Domain.Services.Concrete.WorkTask
 
             if (!string.IsNullOrEmpty(args.Status))
             {
-                result = result.Where(t => t.Status.Name.Contains(args.Status, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                result = result.Where(t => t.Status.Contains(args.Status, StringComparison.CurrentCultureIgnoreCase)).ToList();
             }
 
             if (args.Deadline.HasValue)
@@ -94,7 +94,7 @@ namespace ManagementSystem.Domain.Services.Concrete.WorkTask
 
         public async Task<WorkTasksDto> GetWorkTaskAsync(GetWorkTaskArgs args, CancellationToken cancellationToken = default)
         {
-            var entity =  _workTaskRepository.Get(p => p.Id == args.Id, true, x => x.Department, y => y.Status, z => z.AssignedUser, w => w.Comments);
+            var entity =  _workTaskRepository.Get(p => p.Id == args.Id, true, x => x.Department, z => z.AssignedUser, w => w.Comments);
             if (entity is null)
             {
                 return null;

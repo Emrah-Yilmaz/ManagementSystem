@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240331221901_initialMigration")]
-    partial class initialMigration
+    [Migration("20240401120834_mig1")]
+    partial class mig1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,9 +55,9 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("StatusId")
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TaskId")
                         .HasColumnType("int");
@@ -66,9 +66,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StatusId")
-                        .IsUnique();
 
                     b.HasIndex("TaskId");
 
@@ -107,6 +104,10 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Department");
@@ -142,6 +143,10 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Role");
@@ -149,8 +154,11 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Status", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -161,9 +169,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -173,7 +178,11 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Name");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Status");
                 });
@@ -223,6 +232,10 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -262,6 +275,10 @@ namespace ManagementSystem.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -309,8 +326,9 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("StatusId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -322,19 +340,11 @@ namespace ManagementSystem.Infrastructure.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("Task");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Comment", b =>
                 {
-                    b.HasOne("ManagementSystem.Domain.Entities.Status", "Status")
-                        .WithOne("Comment")
-                        .HasForeignKey("ManagementSystem.Domain.Entities.Comment", "StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ManagementSystem.Domain.Entities.WorkTask", "Task")
                         .WithMany("Comments")
                         .HasForeignKey("TaskId")
@@ -346,8 +356,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("Status");
 
                     b.Navigation("Task");
 
@@ -397,16 +405,9 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ManagementSystem.Domain.Entities.Status", "Status")
-                        .WithMany("Tasks")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.Navigation("AssignedUser");
 
                     b.Navigation("Department");
-
-                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Department", b =>
@@ -417,13 +418,6 @@ namespace ManagementSystem.Infrastructure.Migrations
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Role", b =>
                 {
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("ManagementSystem.Domain.Entities.Status", b =>
-                {
-                    b.Navigation("Comment");
-
-                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.User", b =>
