@@ -76,8 +76,6 @@ namespace ManagementSystem.Domain.Services.Concrete.Comment
                 return null;
             }
 
-            ProcessOwner(entity);
-
             var mappedResult = _mapper.Map<GetCommentDto>(entity);
 
             return mappedResult;

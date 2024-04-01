@@ -34,7 +34,7 @@ namespace ManagementSystem.Infrastructure.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement4; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement5; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -83,6 +83,14 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasMany(wt => wt.Comments)
                 .WithOne(c => c.Task)
                 .HasForeignKey(c => c.TaskId);
+
+            modelBuilder.Entity<WorkTask>()
+                .HasOne(p => p.Project)
+                .WithMany(wt => wt.WorkTasks)
+                .HasForeignKey(p => p.ProjectId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
