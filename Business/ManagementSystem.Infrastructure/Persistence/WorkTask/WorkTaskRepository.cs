@@ -38,7 +38,7 @@ namespace ManagementSystem.Infrastructure.Persistence.WorkTask
 
             if (!string.IsNullOrEmpty(args.Status))
             {
-                query = query.Where(t => t.Status.Name.Contains(args.Status));
+                query = query.Where(t => t.Status.Contains(args.Status));
             }
 
             if (args.Deadline.HasValue)

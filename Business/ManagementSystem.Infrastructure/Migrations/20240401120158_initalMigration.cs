@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ManagementSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class initalMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,6 +18,7 @@ namespace ManagementSystem.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: true),
@@ -37,6 +38,7 @@ namespace ManagementSystem.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: true),
@@ -53,8 +55,10 @@ namespace ManagementSystem.Infrastructure.Migrations
                 name: "Status",
                 columns: table => new
                 {
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: true),
@@ -64,7 +68,7 @@ namespace ManagementSystem.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Status", x => x.Name);
+                    table.PrimaryKey("PK_Status", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,6 +83,7 @@ namespace ManagementSystem.Infrastructure.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: true),
@@ -105,9 +110,9 @@ namespace ManagementSystem.Infrastructure.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StatusId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     AssignedUserId = table.Column<int>(type: "int", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: true),
@@ -125,11 +130,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Task_Status_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Status",
-                        principalColumn: "Name");
-                    table.ForeignKey(
                         name: "FK_Task_User_AssignedUserId",
                         column: x => x.AssignedUserId,
                         principalTable: "User",
@@ -144,6 +144,7 @@ namespace ManagementSystem.Infrastructure.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: true),
@@ -175,7 +176,7 @@ namespace ManagementSystem.Infrastructure.Migrations
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     TaskId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: true),
@@ -187,12 +188,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Comment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comment_Status_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Status",
-                        principalColumn: "Name",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Comment_Task_TaskId",
                         column: x => x.TaskId,
                         principalTable: "Task",
@@ -203,12 +198,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         principalTable: "User",
                         principalColumn: "Id");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comment_StatusId",
-                table: "Comment",
-                column: "StatusId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comment_TaskId",
@@ -231,11 +220,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Task_StatusId",
-                table: "Task",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_User_DepartmentId",
                 table: "User",
                 column: "DepartmentId");
@@ -253,6 +237,9 @@ namespace ManagementSystem.Infrastructure.Migrations
                 name: "Comment");
 
             migrationBuilder.DropTable(
+                name: "Status");
+
+            migrationBuilder.DropTable(
                 name: "UserRole");
 
             migrationBuilder.DropTable(
@@ -260,9 +247,6 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Role");
-
-            migrationBuilder.DropTable(
-                name: "Status");
 
             migrationBuilder.DropTable(
                 name: "User");

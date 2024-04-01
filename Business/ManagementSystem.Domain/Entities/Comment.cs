@@ -11,8 +11,5 @@ namespace ManagementSystem.Domain.Entities
 
         public virtual WorkTask? Task { get; set; }
         public int TaskId { get; set; }
-
-        public virtual Status Status { get; set; }
-        public string StatusId { get; set; }
     }
 }

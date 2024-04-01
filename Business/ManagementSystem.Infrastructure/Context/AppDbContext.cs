@@ -1,9 +1,9 @@
 ﻿using ManagementSystem.Domain.Entities;
+using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.TokenHandler;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ManagementSystem.Infrastructure.Context
 {
@@ -34,7 +34,7 @@ namespace ManagementSystem.Infrastructure.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement3; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement4; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -73,12 +73,6 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasForeignKey(c => c.TaskId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<WorkTask>()
-                .HasOne(t => t.Status)
-                .WithMany(s => s.Tasks)
-                .HasForeignKey(t => t.StatusId)
-                .OnDelete(DeleteBehavior.NoAction);
-
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Department)
                 .WithMany(d => d.Users)
@@ -89,12 +83,6 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasMany(wt => wt.Comments)
                 .WithOne(c => c.Task)
                 .HasForeignKey(c => c.TaskId);
-
-            modelBuilder.Entity<Comment>()
-                .HasOne(e => e.Status)
-                .WithOne(e => e.Comment)
-                .HasForeignKey<Comment>(e => e.StatusId)
-                .IsRequired();
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
@@ -110,6 +98,7 @@ namespace ManagementSystem.Infrastructure.Context
                     data.Entity.CreatedOn = DateTime.Now;
                     data.Entity.CreatedBy = string.Concat(claims.Name + " " + claims.LastName);
                     data.Entity.CreatedById = claims.Id;
+                    data.Entity.Status = StatusEnum.Pending.ToString();
                 }
                 else if (data.State == EntityState.Modified)
                 {
@@ -137,6 +126,7 @@ namespace ManagementSystem.Infrastructure.Context
 
             var datas = ChangeTracker.Entries<BaseEntity>();
             var claims = _domainPrincipal.GetClaims();
+
             foreach (var data in datas)
             {
                 if (data.State == EntityState.Added)
@@ -144,6 +134,15 @@ namespace ManagementSystem.Infrastructure.Context
                     data.Entity.CreatedOn = DateTime.Now;
                     data.Entity.CreatedBy = string.Concat(claims.Name + " " + claims.LastName);
                     data.Entity.CreatedById = claims.Id;
+                    data.Entity.Status = StatusEnum.Pending.ToString();
+                    if (data.Entity is Comment)
+                    {
+                        var comment = (Comment)data.Entity;
+                        if (comment.Status != StatusEnum.Published.ToString())
+                        {
+                            comment.Status = StatusEnum.Published.ToString();
+                        }
+                    }
                 }
                 else if (data.State == EntityState.Modified)
                 {

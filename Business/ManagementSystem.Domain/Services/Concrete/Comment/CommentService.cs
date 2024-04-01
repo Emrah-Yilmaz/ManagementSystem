@@ -24,7 +24,7 @@ namespace ManagementSystem.Domain.Services.Concrete.Comment
         private Domain.Entities.Comment GetEntity(int id)
         {
             var entity = _repository.SingleOrDefaultAsync(
-                predicate: p => p.Id == id && p.StatusId != StatusEnum.Deleted.ToString(),
+                predicate: p => p.Id == id && p.Status != StatusEnum.Deleted.ToString(),
                 noTracking: false);
 
             return entity.Result;
@@ -42,7 +42,7 @@ namespace ManagementSystem.Domain.Services.Concrete.Comment
         public async Task<int> CreateAsync(CreateCommentArgs args, CancellationToken cancellationToken = default)
         {
             var newEntity = _mapper.Map<Domain.Entities.Comment>(args);
-            newEntity.StatusId = StatusEnum.Pending.ToString();
+            newEntity.Status = StatusEnum.Pending.ToString();
             var result = await _repository.AddAsync(newEntity, cancellationToken);
 
             return result;
@@ -58,7 +58,7 @@ namespace ManagementSystem.Domain.Services.Concrete.Comment
 
             ProcessOwner(entity);
 
-            entity.StatusId = StatusEnum.Deleted.ToString();
+            entity.Status = StatusEnum.Deleted.ToString();
             var result = await _repository.UpdateAsync(entity, cancellationToken);
             if (result == 0)
             {

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ManagementSystem.Domain.Models.Args.User;
 using ManagementSystem.Domain.Models.Dto;
+using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.PasswordEncryptor;
 using ManagementSystem.Domain.Persistence.User;
 using ManagementSystem.Domain.Services.Abstract.User;
@@ -31,6 +32,7 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             var entity = _mapper.Map<Domain.Entities.User>(args);
             var hashedPass = Encrypt.Encript(args.PasswordHash);
             entity.PasswordHash = hashedPass;
+            entity.Status = StatusEnum.Pending.ToString();
             var result = await _userRepository.AddAsync(entity, cancellationToken);
 
             //Todo
