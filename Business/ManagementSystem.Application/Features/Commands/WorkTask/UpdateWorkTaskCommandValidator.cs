@@ -24,9 +24,6 @@ namespace ManagementSystem.Application.Features.Commands.WorkTask
              .NotNull()
              .GreaterThanOrEqualTo(DateTime.Now)
              .When(x => x.Deadline.HasValue);
-
-            RuleFor(x => x.StatusId)
-            .GreaterThan(0);
         }
     }
 }

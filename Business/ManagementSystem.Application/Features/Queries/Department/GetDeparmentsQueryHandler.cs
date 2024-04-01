@@ -1,5 +1,5 @@
 ﻿using ManagementSystem.Domain.Models.Dto;
-using ManagementSystem.Domain.Services.Abstract;
+using ManagementSystem.Domain.Services.Abstract.Department;
 using MediatR;
 
 namespace ManagementSystem.Application.Features.Queries.Department

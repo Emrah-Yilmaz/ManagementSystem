@@ -1,6 +1,6 @@
 ﻿using ManagementSystem.Domain.Extensions;
 using ManagementSystem.Domain.Models.Dto;
-using ManagementSystem.Domain.Services.Abstract;
+using ManagementSystem.Domain.Services.Abstract.User;
 using MediatR;
 
 namespace ManagementSystem.Application.Features.Commands.User

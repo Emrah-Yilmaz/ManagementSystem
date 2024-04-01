@@ -1,4 +1,6 @@
-﻿namespace ManagementSystem.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ManagementSystem.Domain.Entities
 {
     public class Comment : BaseEntity
     {
