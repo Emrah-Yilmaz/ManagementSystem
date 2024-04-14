@@ -7,6 +7,7 @@ using ManagementSystem.WebApi.Models.WorkTask.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ManagementSystem.WebApi.Controllers
 {
@@ -31,6 +32,7 @@ namespace ManagementSystem.WebApi.Controllers
         public async Task<IActionResult> All([FromQuery] GetWorkTasksQuery request, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(request);
+
             if (result is null || result.Count == 0)
             {
                 return NotFound();

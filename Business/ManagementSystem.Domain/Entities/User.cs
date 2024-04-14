@@ -11,6 +11,7 @@
         public virtual ICollection<UserRole>? UserRoles { get; set; }
         public virtual ICollection<WorkTask>? WorkTasks { get; set; }
         public virtual ICollection<Project>? Projects { get; set; }
+        public virtual ICollection<Address>? Addresses { get; set; }
         public int? DepartmentId { get; set; }
         public virtual Department? Department { get; set; }
     }
