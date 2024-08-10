@@ -1,8 +1,9 @@
-﻿using ManagementSystem.Domain.Models.Dto;
+﻿using CommonLibrary.Features.Paginations;
+using ManagementSystem.Domain.Models.Dto;
 
 namespace ManagementSystem.Domain.Models.Args.Department
 {
-    public class GetDepartmentsArgs
+    public class GetDepartmentsArgs : BasePagedQuery
     {
         public string? Name { get; set; }
         public string? CreatedBy { get; set; }
