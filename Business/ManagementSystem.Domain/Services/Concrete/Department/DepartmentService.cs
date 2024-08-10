@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using CommonLibrary.Extensions;
+using CommonLibrary.Features.Paginations;
 using ManagementSystem.Domain.Models.Args.Department;
 using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.Domain.Persistence.Department;
@@ -39,17 +42,20 @@ namespace ManagementSystem.Domain.Services.Concrete.Department
             return mappedResult;
         }
 
-        public async Task<IList<DepartmentDto>> GetDepartments(GetDepartmentsArgs args, CancellationToken cancellationToken = default)
+        public async Task<PagedViewModel<DepartmentDto>?> GetDepartments(GetDepartmentsArgs args, CancellationToken cancellationToken = default)
         {
-            var searchTerms = new[]
-                {
-                    (  x => x.Name, args.Name),
-                    (  x => x.CreatedBy, args.CreatedBy),
-                    ( (Expression<Func<Domain.Entities.Department, string>>) (x => x.ModifiedBy), args.ModifiedBy)
-                };
-            var result = await _repository.SearchAsync(searchTerms);
-            var mappedResult = _mapper.Map<IList<DepartmentDto>>(result);
-            return mappedResult;
+            var query = _repository.AsQueryable();
+
+            var departments = await query
+                .ProjectTo<DepartmentDto>(_mapper.ConfigurationProvider)
+                .GetPaged(args.Page, args.PageSize);
+
+            if (departments is null || departments.Results.Count == 0)
+            {
+                return null;
+            }
+
+            return departments;
         }
 
         public async Task<int> UpdateAsync(UpdateDepartmenArgs args, CancellationToken cancellationToken = default)

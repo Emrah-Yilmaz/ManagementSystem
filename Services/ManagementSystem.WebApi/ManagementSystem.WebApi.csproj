@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Comment\Request\" />
-    <Folder Include="Models\Department\Resposne\" />
   </ItemGroup>
 
 </Project>

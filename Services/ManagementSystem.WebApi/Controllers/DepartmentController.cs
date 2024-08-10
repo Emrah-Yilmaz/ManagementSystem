@@ -71,7 +71,7 @@ namespace ManagementSystem.WebApi.Controllers
         public async Task<IActionResult> Search([FromQuery] GetDeparmentsQuery request, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(request);
-            if (result is null || result.Count == 0)
+            if (result is null || result.Results.Count == 0)
             {
                 return NotFound();
             }

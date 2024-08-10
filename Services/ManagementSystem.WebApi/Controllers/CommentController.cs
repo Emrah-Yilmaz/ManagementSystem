@@ -62,7 +62,7 @@ namespace ManagementSystem.WebApi.Controllers
         [ProducesResponseType(typeof(GetCommentResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{Id}")]
-        public async Task<IActionResult> Get ([FromRoute] GetCommentQuery request, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Get([FromRoute] GetCommentQuery request, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(request, cancellationToken);
             var mappedResult = _mapper.Map<GetCommentResponse>(result);

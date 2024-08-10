@@ -1,6 +1,6 @@
-﻿namespace ManagementSystem.Domain.Models.Dto
+﻿namespace ManagementSystem.WebApi.Models.Department.Resposne
 {
-    public class DepartmentDto
+    public class DepartmentResponse
     {
         public int Id { get; set; }
         public string? Name { get; set; }

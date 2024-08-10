@@ -28,13 +28,18 @@ namespace ManagementSystem.Infrastructure.Context
         public DbSet<UserRole> UserRole { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<Department> Department { get; set; }
-
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Quarter> Quarters { get; set; }
+        public DbSet<Street> Streets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement4; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement5; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -83,6 +88,45 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasMany(wt => wt.Comments)
                 .WithOne(c => c.Task)
                 .HasForeignKey(c => c.TaskId);
+
+            modelBuilder.Entity<WorkTask>()
+                .HasOne(p => p.Project)
+                .WithMany(wt => wt.WorkTasks)
+                .HasForeignKey(p => p.ProjectId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Address tablosuyla City tablosu arasındaki ilişkiyi belirtme
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.City)
+                .WithMany()
+                .HasForeignKey(a => a.CityId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // District tablosuyla City tablosu arasındaki ilişkiyi belirtme
+            modelBuilder.Entity<District>()
+                .HasOne(d => d.City)
+                .WithMany(c => c.Districts)
+                .HasForeignKey(d => d.CityId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            // Quarter tablosuyla District tablosu arasındaki ilişkiyi belirtme
+            modelBuilder.Entity<Quarter>()
+                .HasOne(q => q.District)
+                .WithMany(d => d.Quarters)
+                .HasForeignKey(q => q.DistrictId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            // Street tablosuyla Quarter tablosu arasındaki ilişkiyi belirtme
+            modelBuilder.Entity<Street>()
+                .HasOne(s => s.Quarter)
+                .WithMany(q => q.Streets)
+                .HasForeignKey(s => s.QuarterId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
