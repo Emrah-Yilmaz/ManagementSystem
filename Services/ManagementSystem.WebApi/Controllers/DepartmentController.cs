@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using CommonLibrary.Features.Paginations;
 using ManagementSystem.Application.Features.Commands.Department;
 using ManagementSystem.Application.Features.Queries.Department;
+using ManagementSystem.Domain.Models.Dto;
+using ManagementSystem.WebApi.Models.Department.Request;
+using ManagementSystem.WebApi.Models.Department.Resposne;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -65,18 +69,25 @@ namespace ManagementSystem.WebApi.Controllers
         }
 
         [HttpGet()]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedViewModel<DepartmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Search([FromQuery] GetDeparmentsQuery request, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Departments([FromQuery] DepartmentRequest request, CancellationToken cancellationToken = default)
         {
-            var result = await _mediator.Send(request);
+            var query = new GetDeparmentsQuery
+            {
+                Page = request.Page,
+                PageSize = request.PageSize
+            };
+
+            var result = await _mediator.Send(query);
             if (result is null || result.Results.Count == 0)
             {
                 return NotFound();
             }
+            var mappedResponse = _mapper.Map<PagedViewModel<DepartmentResponse>>(result);
 
-            return Ok(result);
+            return Ok(mappedResponse);
         }
     }
 }
