@@ -21,6 +21,8 @@ builder.Services.AddApplicationRegistration();
 builder.Services.AddWebApiRegistration();
 builder.Services.AddDomainRegistration();
 builder.Services.AddInfrastructureRegistration(builder.Configuration);
+builder.Services.AddStackExchangeRedisCache(opt => opt.Configuration = "localhost:6379");
+
 
 builder.Services.AddSwaggerGen(opt =>
 { 
