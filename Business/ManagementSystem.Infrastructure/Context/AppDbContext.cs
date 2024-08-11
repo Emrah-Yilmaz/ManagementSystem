@@ -142,7 +142,7 @@ namespace ManagementSystem.Infrastructure.Context
                     data.Entity.CreatedOn = DateTime.Now;
                     data.Entity.CreatedBy = string.Concat(claims.Name + " " + claims.LastName);
                     data.Entity.CreatedById = claims.Id;
-                    data.Entity.Status = StatusEnum.Pending.ToString();
+                    data.Entity.Status = StatusType.Pending.ToString();
                 }
                 else if (data.State == EntityState.Modified)
                 {
@@ -178,13 +178,13 @@ namespace ManagementSystem.Infrastructure.Context
                     data.Entity.CreatedOn = DateTime.Now;
                     data.Entity.CreatedBy = string.Concat(claims.Name + " " + claims.LastName);
                     data.Entity.CreatedById = claims.Id;
-                    data.Entity.Status = StatusEnum.Pending.ToString();
+                    data.Entity.Status = StatusType.Pending.ToString();
                     if (data.Entity is Comment)
                     {
                         var comment = (Comment)data.Entity;
-                        if (comment.Status != StatusEnum.Published.ToString())
+                        if (comment.Status != StatusType.Published.ToString())
                         {
-                            comment.Status = StatusEnum.Published.ToString();
+                            comment.Status = StatusType.Published.ToString();
                         }
                     }
                 }

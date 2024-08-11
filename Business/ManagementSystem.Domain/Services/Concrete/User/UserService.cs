@@ -32,7 +32,7 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             var entity = _mapper.Map<Domain.Entities.User>(args);
             var hashedPass = Encrypt.Encript(args.PasswordHash);
             entity.PasswordHash = hashedPass;
-            entity.Status = StatusEnum.Pending.ToString();
+            entity.Status = StatusType.Pending.ToString();
             var result = await _userRepository.AddAsync(entity, cancellationToken);
 
             //Todo

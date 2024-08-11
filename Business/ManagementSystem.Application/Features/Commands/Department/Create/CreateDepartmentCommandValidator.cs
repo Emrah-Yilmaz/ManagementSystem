@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ManagementSystem.Application.Features.Commands.Department
+namespace ManagementSystem.Application.Features.Commands.Department.Create
 {
     public class CreateDepartmentCommandValidator : AbstractValidator<CreateDepartmentCommand>
     {

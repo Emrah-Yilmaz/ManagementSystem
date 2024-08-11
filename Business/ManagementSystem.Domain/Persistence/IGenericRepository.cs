@@ -9,7 +9,7 @@ namespace ManagementSystem.Domain.Persistence
         Task<int> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task<int> AddRangeAsync(IEnumerable<TEntity> entities);
         Task<int> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-        Task<int> DeleteAsync(int id);
+        Task<int> DeleteAsync(int id, CancellationToken cancellationToken = default);
         Task<int> DeleteAsync(TEntity identity);
         Task<bool> DeleteRangeAsync(Expression<Func<TEntity, bool>> predicate);
         Task<int> AddOrUpdateAsync(TEntity entity);
@@ -30,6 +30,7 @@ namespace ManagementSystem.Domain.Persistence
         int AddOrUpdate(TEntity entity);
         int SaveChange();
         Task<int> SaveChangeAsync();
+        IQueryable<TEntity> AsQueryable(Expression<Func<TEntity, bool>> expression);
         IQueryable<TEntity> AsQueryable();
         Task<List<TEntity>> SearchAsync(params (Expression<Func<TEntity, string>> property, string searchTerm)[] searchTerms);
 

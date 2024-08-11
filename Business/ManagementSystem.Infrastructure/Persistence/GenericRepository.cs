@@ -1,7 +1,9 @@
 ﻿using ManagementSystem.Domain.Entities;
+using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.Persistence;
 using ManagementSystem.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using NLog.Filters;
 using System.Linq.Expressions;
 
 namespace ManagementSystem.Infrastructure.Persistence
@@ -16,8 +18,23 @@ namespace ManagementSystem.Infrastructure.Persistence
         }
 
         #region Get Methods
-        public virtual IQueryable<TEntity> AsQueryable() => entity.AsQueryable();
+        public virtual IQueryable<TEntity> AsQueryable(Expression<Func<TEntity, bool>> expression)
+        {
+            var query = StatusFiltered(entity.AsQueryable());
+            if (expression is not null)
+            {
+                var filtered = query.Where(expression);
+                return filtered.AsQueryable();
+            }
 
+            return query.AsQueryable();
+
+        }
+        public virtual IQueryable<TEntity> AsQueryable()
+        {
+            var query = StatusFiltered(entity.AsQueryable());
+            return query.AsQueryable();
+        }
         public virtual async Task<TEntity> FindAsync(int id)
         {
             return await entity.FindAsync(id);
@@ -25,7 +42,7 @@ namespace ManagementSystem.Infrastructure.Persistence
 
         public virtual async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
         {
-            var query = entity.AsQueryable();
+            var query = StatusFiltered(entity.AsQueryable());
 
             if (predicate != null)
                 query = query.Where(predicate);
@@ -39,7 +56,7 @@ namespace ManagementSystem.Infrastructure.Persistence
         }
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
         {
-            var query = entity.AsQueryable();
+            var query = StatusFiltered(entity.AsQueryable());
 
             if (predicate != null)
                 query = query.Where(predicate);
@@ -53,8 +70,7 @@ namespace ManagementSystem.Infrastructure.Persistence
         }
         public virtual async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
         {
-            var query = entity.AsQueryable();
-
+            var query = StatusFiltered(entity.AsQueryable());
             if (predicate != null)
                 query = query.Where(predicate);
 
@@ -65,9 +81,14 @@ namespace ManagementSystem.Infrastructure.Persistence
 
             return await query.SingleOrDefaultAsync();
         }
+        private IQueryable<TEntity> StatusFiltered(IQueryable<TEntity> entity)
+        {
+            var filteredResult = entity.Where(e => e.Status != nameof(StatusType.Deleted));
+            return filteredResult;
+        }
         public virtual TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
         {
-            var query = entity.AsQueryable();
+            var query = StatusFiltered(entity.AsQueryable());
 
             if (predicate != null)
                 query = query.Where(predicate);
@@ -185,11 +206,11 @@ namespace ManagementSystem.Infrastructure.Persistence
         {
             this.entity.Attach(entity);
             _dbContext.Entry(entity).State = EntityState.Modified;
-             await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return entity.Id;
         }
         #endregion
-         
+
         #region AddOrUpdate Methods
         public virtual int AddOrUpdate(TEntity entity)
         {
@@ -221,12 +242,27 @@ namespace ManagementSystem.Infrastructure.Persistence
             return Delete(entity);
         }
 
-        public async Task<int> DeleteAsync(int id)
+        public async Task<int> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             var entity = await this.entity.FindAsync(id);
             if (entity == null)
                 return 0;
-            return await DeleteAsync(entity);
+            return await SoftDelete(entity);
+        }
+
+        private async Task<int> SoftDelete(TEntity entity)
+        {
+            this.entity.Attach(entity);
+            _dbContext.Entry(entity).State = EntityState.Modified;
+            entity.Status = StatusType.Deleted.ToString();
+            await _dbContext.SaveChangesAsync();
+            return entity.Id;
+        }
+
+        public async Task<int> DeleteAsync(TEntity identity)
+        {
+            _dbContext.Entry(identity).State = EntityState.Deleted;
+            return _dbContext.SaveChanges();
         }
 
         public virtual bool DeleteRange(Expression<Func<TEntity, bool>> predicate)
@@ -267,11 +303,6 @@ namespace ManagementSystem.Infrastructure.Persistence
             }
 
             return query;
-        }
-
-        public Task<int> DeleteAsync(TEntity identity)
-        {
-            throw new NotImplementedException();
         }
 
         public int Delete(TEntity identity)

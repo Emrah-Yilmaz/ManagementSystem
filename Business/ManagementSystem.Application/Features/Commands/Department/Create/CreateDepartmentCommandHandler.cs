@@ -1,7 +1,7 @@
 ﻿using ManagementSystem.Domain.Services.Abstract.Department;
 using MediatR;
 
-namespace ManagementSystem.Application.Features.Commands.Department
+namespace ManagementSystem.Application.Features.Commands.Department.Create
 {
     public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, int>
     {

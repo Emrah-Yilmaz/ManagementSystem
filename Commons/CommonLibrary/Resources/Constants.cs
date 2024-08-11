@@ -2,9 +2,14 @@
 {
     public struct  Constants
     {
-        public struct Department
+        public struct Caches
         {
-            public const string DepartmentQuery = "GetDeparmentQuery {0} - {1}";
+            public struct Department
+            {
+                public const string CacheKey = "GetDeparmentQuery {0} - {1}";
+                public const string CachceGroupKey = "GetDepartments";
+            }
         }
+        
     }
 }

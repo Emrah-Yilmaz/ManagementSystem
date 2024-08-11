@@ -1,7 +1,7 @@
 ﻿using ManagementSystem.Domain.Services.Abstract.Department;
 using MediatR;
 
-namespace ManagementSystem.Application.Features.Commands.Department
+namespace ManagementSystem.Application.Features.Commands.Department.Update
 {
     public class UpdateDepartmentCommandHandler : IRequestHandler<UpdateDepartmentCommand, int>
     {

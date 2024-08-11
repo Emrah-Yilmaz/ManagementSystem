@@ -8,6 +8,7 @@ using ManagementSystem.Domain.Persistence.Department;
 using ManagementSystem.Domain.Services.Abstract.Department;
 using ManagementSystem.Domain.TokenHandler;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ManagementSystem.Domain.Services.Concrete.Department
 {
@@ -30,6 +31,12 @@ namespace ManagementSystem.Domain.Services.Concrete.Department
             return result;
         }
 
+        public async Task<int> Deletesync(GetDepartmentArgs args, CancellationToken cancellationToken = default)
+        {
+            var result = await _repository.DeleteAsync(args.Id, cancellationToken);
+            return result;
+        }
+
         public async Task<DepartmentDto> GetDepartment(GetDepartmentArgs args, CancellationToken cancellationToken = default)
         {
             var result = await _repository.SingleOrDefaultAsync(p => p.Id == args.Id);
@@ -44,7 +51,7 @@ namespace ManagementSystem.Domain.Services.Concrete.Department
 
         public async Task<PagedViewModel<DepartmentDto>?> GetDepartments(GetDepartmentsArgs args, CancellationToken cancellationToken = default)
         {
-            var query = _repository.AsQueryable();
+            var query = (args.Name is null) ?  _repository.AsQueryable() : _repository.AsQueryable(p => p.Name.Contains(args.Name));
 
             var departments = await query
                 .ProjectTo<DepartmentDto>(_mapper.ConfigurationProvider)
