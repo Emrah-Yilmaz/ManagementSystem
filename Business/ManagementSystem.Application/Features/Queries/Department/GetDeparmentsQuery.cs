@@ -9,9 +9,9 @@ namespace ManagementSystem.Application.Features.Queries.Department
 {
     public class GetDeparmentsQuery : GetDepartmentsArgs, IRequest<PagedViewModel<DepartmentDto>>, ICachableRequest
     {
-        public string CacheKey => string.Format(Constants.Department.DepartmentQuery, Page, PageSize);
+        public string CacheKey => string.Format(Constants.Caches.Department.CacheKey, Page, PageSize);
         public bool BypassCache { get; }
         public TimeSpan? SlidingExpiration { get; }
-        public string? CacheGroupKey => "Department";
+        public string? CacheGroupKey => Constants.Caches.Department.CachceGroupKey;
     }
 }

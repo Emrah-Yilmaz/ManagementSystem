@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CommonLibrary.Features.Paginations;
-using ManagementSystem.Application.Features.Commands.Department;
+using ManagementSystem.Application.Features.Commands.Department.Create;
+using ManagementSystem.Application.Features.Commands.Department.Delete;
+using ManagementSystem.Application.Features.Commands.Department.Update;
 using ManagementSystem.Application.Features.Queries.Department;
 using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.WebApi.Models.Department.Request;
@@ -52,12 +54,29 @@ namespace ManagementSystem.WebApi.Controllers
 
             return Ok(result);
         }
-
-        [HttpGet("{Id}")]
+        [HttpDelete("{Id}")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById([FromRoute] GetDepartmentQuery request, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Delete([FromRoute] int Id, CancellationToken cancellationToken = default)
+        {
+            var command = new DeleteDepartmentCommand
+            {
+                Id = Id
+            };
+            var result = await _mediator.Send(command);
+            if (result == 0)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
+        }
+        [HttpGet("{Id}")]
+        [ProducesResponseType(typeof(DepartmentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetDepartment([FromRoute] GetDepartmentQuery request, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(request);
             if (result is null)
@@ -65,19 +84,22 @@ namespace ManagementSystem.WebApi.Controllers
                 return NotFound();
             }
 
-            return Ok(result);
+            var mappedResponse = _mapper.Map<DepartmentResponse>(result);
+
+            return Ok(mappedResponse);
         }
 
         [HttpGet()]
         [ProducesResponseType(typeof(PagedViewModel<DepartmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Departments([FromQuery] DepartmentRequest request, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetDepartments([FromQuery] DepartmentRequest request, CancellationToken cancellationToken = default)
         {
             var query = new GetDeparmentsQuery
             {
                 Page = request.Page,
-                PageSize = request.PageSize
+                PageSize = request.PageSize,
+                Name = request.Name
             };
 
             var result = await _mediator.Send(query);
@@ -85,6 +107,7 @@ namespace ManagementSystem.WebApi.Controllers
             {
                 return NotFound();
             }
+
             var mappedResponse = _mapper.Map<PagedViewModel<DepartmentResponse>>(result);
 
             return Ok(mappedResponse);

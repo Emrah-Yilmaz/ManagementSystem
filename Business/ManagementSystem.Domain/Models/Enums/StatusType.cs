@@ -1,6 +1,6 @@
 ﻿namespace ManagementSystem.Domain.Models.Enums
 {
-    public enum StatusEnum
+    public enum StatusType
     {
         Pending = 1,
         Approval = 2,

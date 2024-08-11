@@ -6,6 +6,7 @@ namespace ManagementSystem.Application.Features.Queries.Department
     {
         public GetDeparmentsQueryValidator()
         {
+            RuleFor(p => p.Name).MaximumLength(3);
         }
     }
 }
