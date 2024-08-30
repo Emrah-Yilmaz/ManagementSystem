@@ -6,6 +6,7 @@ using ManagementSystem.WebApi.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Packages.Extensions;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -93,6 +94,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.ConfigureCustomerExceptionMiddleware();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
