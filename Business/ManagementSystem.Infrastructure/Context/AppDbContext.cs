@@ -39,7 +39,7 @@ namespace ManagementSystem.Infrastructure.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement5; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement6; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();

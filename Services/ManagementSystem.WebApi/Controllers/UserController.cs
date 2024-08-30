@@ -2,6 +2,7 @@
 using ManagementSystem.Application.Features.Commands.User;
 using ManagementSystem.WebApi.Models.User;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManagementSystem.WebApi.Controllers
@@ -22,6 +23,7 @@ namespace ManagementSystem.WebApi.Controllers
         [HttpPost()]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(command);
