@@ -8,6 +8,7 @@ using ManagementSystem.Domain.Services.Abstract.User;
 using ManagementSystem.Domain.Utilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Packages.Exceptions.Types;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -51,7 +52,7 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             var isExistPass = dbUser.PasswordHash == hashedPass;
             if (!isExistPass)
             {
-                throw new Exception("Kullanıcı adı ya da parola hatalı");
+                throw new BusinessException("Kullanıcı adı ya da parola hatalı");
             }
 
             var model = new LoginDto

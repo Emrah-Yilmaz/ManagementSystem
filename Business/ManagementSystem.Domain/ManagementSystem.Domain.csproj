@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Commons\CommonLibrary\CommonLibrary.csproj" />
+    <ProjectReference Include="..\..\CorePackages\Packages\Packages.csproj" />
   </ItemGroup>
 
 </Project>
