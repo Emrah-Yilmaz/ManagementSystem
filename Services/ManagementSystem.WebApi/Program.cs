@@ -27,7 +27,7 @@ builder.Services.AddStackExchangeRedisCache(opt => opt.Configuration = "localhos
 
 builder.Services.AddSwaggerGen(opt =>
 { 
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "CEMSAHIN", Version = "v1" });
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "ManagementSystem", Version = "v1" });
     opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
