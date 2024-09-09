@@ -1,0 +1,6 @@
+@ManagementSystem.Notification_HostAddress = http://localhost:5221
+
+GET {{ManagementSystem.Notification_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
