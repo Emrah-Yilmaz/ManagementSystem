@@ -63,10 +63,10 @@ builder.Services.AddAuthentication(x =>
 }).AddJwtBearer(x =>
 {
 
-    x.Audience = "ARVATO";
+    x.Audience = "ManagementSystem";
     x.RequireHttpsMetadata = false;
     x.SaveToken = true;
-    x.ClaimsIssuer = "ARVATO.Issuer.Development";
+    x.ClaimsIssuer = "MS.Issuer.Development";
     x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
         RequireExpirationTime = true,
