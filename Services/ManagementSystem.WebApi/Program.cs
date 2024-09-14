@@ -3,6 +3,7 @@ using ManagementSystem.Application.Extensions;
 using ManagementSystem.Domain.Extensions;
 using ManagementSystem.Infrastructure.Extensions;
 using ManagementSystem.WebApi.Extensions;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -24,6 +25,22 @@ builder.Services.AddDomainRegistration();
 builder.Services.AddInfrastructureRegistration(builder.Configuration);
 builder.Services.AddStackExchangeRedisCache(opt => opt.Configuration = "localhost:6379");
 
+var rabbitMqHost = builder.Configuration["RabbitMQ:Host"];
+var rabbitMqPort = builder.Configuration["RabbitMQ:Port"];
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var rabbitMqConfig = context.GetRequiredService<IConfiguration>().GetSection("RabbitMQ");
+        cfg.Host(rabbitMqConfig["Host"], h =>
+        {
+            h.Username(rabbitMqConfig["Username"]);
+            h.Password(rabbitMqConfig["Password"]);
+        });
+    });
+});
+builder.Services.AddMassTransitHostedService();
 
 builder.Services.AddSwaggerGen(opt =>
 { 
