@@ -1,25 +1,40 @@
+using ManagementSystem.Notification.Consumers.EmailConsumers;
+using MassTransit;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// RabbitMQ yapýlandýrmasý
+var rabbitMqHost = builder.Configuration["RabbitMQ:Host"];
+var rabbitMqPort = builder.Configuration["RabbitMQ:Port"];
 
+// MassTransit ve RabbitMQ yapýlandýrmasý
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<SendEmailConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(rabbitMqHost, rabbitMqPort, "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ReceiveEndpoint("sample_event_queue", e =>
+        {
+            e.ConfigureConsumer<SendEmailConsumer>(context);
+        });
+    });
+}).BuildServiceProvider();
+
+builder.Services.AddMassTransitHostedService();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseRouting();
+app.UseEndpoints(endpoints =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
+    endpoints.MapControllers();
+});
 
 app.Run();
