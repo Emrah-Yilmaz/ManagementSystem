@@ -7,7 +7,7 @@ namespace ManagementSystem.Notification.Consumers.EmailConsumers
     {
         public Task Consume(ConsumeContext<CreatedDepartmentMessage> context)
         {
-            // ok 
+            // TODO: Email sending feature will be added 
             return Task.CompletedTask;
         }
     }

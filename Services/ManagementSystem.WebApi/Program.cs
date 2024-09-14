@@ -30,16 +30,16 @@ var rabbitMqPort = builder.Configuration["RabbitMQ:Port"];
 
 builder.Services.AddMassTransit(x =>
 {
-    x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+    x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(rabbitMqHost, rabbitMqPort, "/", h =>
+        var rabbitMqConfig = context.GetRequiredService<IConfiguration>().GetSection("RabbitMQ");
+        cfg.Host(rabbitMqConfig["Host"], h =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            h.Username(rabbitMqConfig["Username"]);
+            h.Password(rabbitMqConfig["Password"]);
         });
-    }));
+    });
 });
-
 builder.Services.AddMassTransitHostedService();
 
 builder.Services.AddSwaggerGen(opt =>
