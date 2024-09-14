@@ -1,0 +1,29 @@
+﻿using ManagementSystem.Application.Events.DepartmentEvents;
+using ManagementSystem.Domain.Services.Abstract.Department;
+using MediatR;
+
+namespace ManagementSystem.Application.Features.Commands.Department.Create
+{
+    public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, int>
+    {
+        private readonly IDepartmentService _service;
+        private readonly IMediator _mediator;
+
+        public CreateDepartmentCommandHandler(IDepartmentService service, IMediator mediator)
+        {
+            _service = service;
+            _mediator = mediator;
+        }
+
+        public async Task<int> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _service.CreateAsync(request, cancellationToken);
+            var @eventCreateDepartment = new SendEmailEvent()
+            {
+                Id = 1
+            };
+            await _mediator.Publish(eventCreateDepartment, cancellationToken);
+            return result;
+        }
+    }
+}
