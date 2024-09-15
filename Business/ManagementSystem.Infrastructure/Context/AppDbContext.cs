@@ -178,7 +178,10 @@ namespace ManagementSystem.Infrastructure.Context
                     data.Entity.CreatedOn = DateTime.Now;
                     data.Entity.CreatedBy = string.Concat(claims.Name + " " + claims.LastName);
                     data.Entity.CreatedById = claims.Id;
-                    data.Entity.Status = StatusType.Pending.ToString();
+                    if (data.Entity.Status is null)
+                    {
+                        data.Entity.Status = StatusType.Pending.ToString();
+                    }
                     if (data.Entity is Comment)
                     {
                         var comment = (Comment)data.Entity;

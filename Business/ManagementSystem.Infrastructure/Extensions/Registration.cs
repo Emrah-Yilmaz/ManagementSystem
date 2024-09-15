@@ -1,6 +1,7 @@
 ﻿using ManagementSystem.Domain.Persistence.City;
 using ManagementSystem.Domain.Persistence.Comment;
 using ManagementSystem.Domain.Persistence.Department;
+using ManagementSystem.Domain.Persistence.Location;
 using ManagementSystem.Domain.Persistence.User;
 using ManagementSystem.Domain.Persistence.WorkTask;
 using ManagementSystem.Domain.Ports;
@@ -9,6 +10,7 @@ using ManagementSystem.Infrastructure.Context;
 using ManagementSystem.Infrastructure.Persistence.City;
 using ManagementSystem.Infrastructure.Persistence.Comment;
 using ManagementSystem.Infrastructure.Persistence.Department;
+using ManagementSystem.Infrastructure.Persistence.Location;
 using ManagementSystem.Infrastructure.Persistence.User;
 using ManagementSystem.Infrastructure.Persistence.WorkTask;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +39,9 @@ namespace ManagementSystem.Infrastructure.Extensions
             services.AddScoped<IDepartmentRepository, DeparmentRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
-            services.AddScoped<ICityManager, CityAdapter>();
+            services.AddScoped<ILocationManager, LocationAdapter>();
+            services.AddScoped<IDistrictRepository, DistrictRepository>();
+            services.AddScoped<IQuarterRepository, QuarterRepository>();
             
             return services;
         }

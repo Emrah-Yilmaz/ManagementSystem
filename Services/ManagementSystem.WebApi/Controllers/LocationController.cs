@@ -7,24 +7,23 @@ namespace ManagementSystem.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CityController : ControllerBase
+    public class LocationController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
-        public CityController(IMapper mapper, IMediator mediator)
+        public LocationController(IMapper mapper, IMediator mediator)
         {
             _mapper = mapper;
             _mediator = mediator;
         }
-        [HttpPost()]
+        [HttpPost("city")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CreateAsync(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> CreateCitiesAsync([FromBody]SyncLocationCommand command, CancellationToken cancellationToken = default)
         {
-            var command = new CreateCityCommand();
             var result = await _mediator.Send(command, cancellationToken);
 
-            if (result <= 0)
+            if (!result)
             {
                 return BadRequest();
             }

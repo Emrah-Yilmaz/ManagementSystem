@@ -11,7 +11,6 @@ namespace ManagementSystem.Domain.MappingProfile.City
             CreateMap<State, Domain.Entities.City>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => RemoveProvince(src.Name)))
                 .ForMember(dest => dest.CityCode, opt => opt.MapFrom(src => src.StateCode))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(StatusType.Published.ToString()))
                 .ReverseMap();
         }
 
