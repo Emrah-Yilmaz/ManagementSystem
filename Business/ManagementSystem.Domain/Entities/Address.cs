@@ -3,7 +3,7 @@
     public class Address : BaseEntity
     {
         public int UserId { get; set; }
-        public virtual required ICollection<User> Users { get; set; }
+        public virtual required User User { get; set; }
 
         public int CityId { get; set; }
         public virtual required City City { get; set; }
