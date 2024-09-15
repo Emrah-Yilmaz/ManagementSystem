@@ -1,7 +1,9 @@
-﻿using ManagementSystem.Domain.Services.Abstract.Comment;
+﻿using ManagementSystem.Domain.Services.Abstract.City;
+using ManagementSystem.Domain.Services.Abstract.Comment;
 using ManagementSystem.Domain.Services.Abstract.Department;
 using ManagementSystem.Domain.Services.Abstract.User;
 using ManagementSystem.Domain.Services.Abstract.WorkTask;
+using ManagementSystem.Domain.Services.Concrete.City;
 using ManagementSystem.Domain.Services.Concrete.Comment;
 using ManagementSystem.Domain.Services.Concrete.Department;
 using ManagementSystem.Domain.Services.Concrete.User;
@@ -20,6 +22,7 @@ namespace ManagementSystem.Domain.Extensions
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IDomainPrincipal, DomainPrincipal>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ICityService, CityService>();
             return services;
         }
     }
