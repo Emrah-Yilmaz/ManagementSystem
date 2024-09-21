@@ -42,6 +42,7 @@ namespace ManagementSystem.Infrastructure.Extensions
             services.AddScoped<ILocationManager, LocationAdapter>();
             services.AddScoped<IDistrictRepository, DistrictRepository>();
             services.AddScoped<IQuarterRepository, QuarterRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
             
             return services;
         }

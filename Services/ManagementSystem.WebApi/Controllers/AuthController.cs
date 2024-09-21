@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ManagementSystem.Application.Features.Commands.User;
 using ManagementSystem.Domain.Models;
-using ManagementSystem.WebApi.Models.User;
+using ManagementSystem.WebApi.Models.Response.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

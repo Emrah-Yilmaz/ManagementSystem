@@ -8,6 +8,6 @@ namespace ManagementSystem.Domain.Models.Dto
         public string Status { get; set; }
 
         [JsonPropertyName("data")]
-        public List<DistrictData> Data { get; set; }
+        public List<QuarterResult> Data { get; set; }
     }
 }

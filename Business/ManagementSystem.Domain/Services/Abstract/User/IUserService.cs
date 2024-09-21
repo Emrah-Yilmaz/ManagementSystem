@@ -7,5 +7,6 @@ namespace ManagementSystem.Domain.Services.Abstract.User
     {
         public Task<LoginDto> LoginAsync(LoginArgs args, CancellationToken cancellationToken = default);
         public Task<int> CreateAsync(CreateUserArgs args, CancellationToken cancellationToken = default);
+        public Task<bool> CreateUserAddressAsync(CreateAddressArgs args, CancellationToken cancellationToken = default);
     }
 }

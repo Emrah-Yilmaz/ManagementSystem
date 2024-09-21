@@ -5,6 +5,5 @@
         City,
         District,
         Quarter,
-        Street
     }
 }

@@ -1,6 +1,6 @@
 ﻿using ManagementSystem.Application.Features.Commands.User;
 using ManagementSystem.Domain.Models.Dto;
-using ManagementSystem.WebApi.Models.User;
+using ManagementSystem.WebApi.Models.Response.User;
 
 namespace ManagementSystem.WebApi.MappingProfile.User
 {

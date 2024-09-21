@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using ManagementSystem.Domain.Entities;
 using ManagementSystem.Domain.Models.Args.User;
 using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.PasswordEncryptor;
+using ManagementSystem.Domain.Persistence.Location;
 using ManagementSystem.Domain.Persistence.User;
 using ManagementSystem.Domain.Services.Abstract.User;
 using ManagementSystem.Domain.Utilities;
@@ -20,6 +22,7 @@ namespace ManagementSystem.Domain.Services.Concrete.User
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly IAddressRepository _addressRepository;
 
         public UserService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper)
         {
@@ -40,6 +43,28 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             //RabbitMQ implementasyonu sonrasında Doğrulama maili gönderilecek
 
             return result;
+        }
+
+        public async Task<bool> CreateUserAddressAsync(CreateAddressArgs args, CancellationToken cancellationToken = default)
+        {
+            var user = await _userRepository.GetByIdAsync(args.UserId);
+            if (user is null)
+                return false;
+
+            var userAddress = new Address()
+            {
+                CityId = args.CityId,
+                DistrictId = args.DistrictId,
+                QuerterId = args.QuarterId,
+                UserId = args.UserId,
+                Description = args.Description,
+                Status = StatusType.Published.ToString()
+            };
+            user.Addresses ??= new List<Address>();
+            user.Addresses.Add(userAddress);
+            await _userRepository.UpdateAsync(user, cancellationToken);
+            //await _userRepository.SaveChangeAsync();
+            return true;
         }
 
         public async Task<LoginDto> LoginAsync(LoginArgs args, CancellationToken cancellationToken = default)

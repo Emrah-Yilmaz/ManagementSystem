@@ -1,5 +1,5 @@
 ﻿using ManagementSystem.Domain.Models.Enums;
-using ManagementSystem.Domain.Services.Abstract.City;
+using ManagementSystem.Domain.Services.Abstract.Location;
 using MediatR;
 
 namespace ManagementSystem.Application.Features.Commands.City
@@ -30,6 +30,7 @@ namespace ManagementSystem.Application.Features.Commands.City
                 var result = _locationService.CreateQuartersAsync();
                 return result;
             }
+
         }
     }
 }

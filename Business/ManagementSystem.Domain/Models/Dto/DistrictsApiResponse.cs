@@ -6,5 +6,5 @@ public class DistrictsApiResponse
     public string Status { get; set; }
 
     [JsonPropertyName("data")]
-    public List<Province> Data { get; set; }
+    public List<LocationDataResult> Data { get; set; }
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ManagementSystem.Application.Features.Commands.Comment;
 using ManagementSystem.Application.Features.Queries.Comment;
-using ManagementSystem.WebApi.Models.Comment.Response;
+using ManagementSystem.WebApi.Models.Response.Comment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

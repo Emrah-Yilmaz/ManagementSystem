@@ -33,7 +33,6 @@ namespace ManagementSystem.Infrastructure.Context
         public DbSet<City> Cities { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Quarter> Quarters { get; set; }
-        public DbSet<Street> Streets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -95,12 +94,6 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasForeignKey(p => p.ProjectId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // Address tablosuyla City tablosu arasındaki ilişkiyi belirtme
-            modelBuilder.Entity<Address>()
-                .HasOne(a => a.City)
-                .WithMany()
-                .HasForeignKey(a => a.CityId)
-                .OnDelete(DeleteBehavior.NoAction);
 
             // District tablosuyla City tablosu arasındaki ilişkiyi belirtme
             modelBuilder.Entity<District>()
@@ -118,15 +111,12 @@ namespace ManagementSystem.Infrastructure.Context
                 .OnDelete(DeleteBehavior.NoAction);
 
 
-            // Street tablosuyla Quarter tablosu arasındaki ilişkiyi belirtme
-            modelBuilder.Entity<Street>()
-                .HasOne(s => s.Quarter)
-                .WithMany(q => q.Streets)
-                .HasForeignKey(s => s.QuarterId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-
-
+            //// Street tablosuyla Quarter tablosu arasındaki ilişkiyi belirtme
+            //modelBuilder.Entity<Street>()
+            //    .HasOne(s => s.Quarter)
+            //    .WithMany(q => q.Streets)
+            //    .HasForeignKey(s => s.QuarterId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }

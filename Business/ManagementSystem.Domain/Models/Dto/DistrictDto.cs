@@ -1,16 +1,9 @@
-﻿using System.Text.Json.Serialization;
-
-public class DistrictDto
+﻿namespace ManagementSystem.Domain.Models.Dto
 {
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; }
-
-    [JsonPropertyName("population")]
-    public int Population { get; set; }
-
-    [JsonPropertyName("area")]
-    public int Area { get; set; }
+    public class DistrictDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int CityId { get; set; }
+    }
 }

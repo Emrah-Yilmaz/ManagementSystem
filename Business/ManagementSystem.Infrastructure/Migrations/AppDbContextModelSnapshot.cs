@@ -42,6 +42,10 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DistrictId")
                         .HasColumnType("int");
 
@@ -61,15 +65,10 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StreetId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("UserId");
 
@@ -412,50 +411,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.ToTable("Status");
                 });
 
-            modelBuilder.Entity("ManagementSystem.Domain.Entities.Street", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CreatedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuarterId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuarterId");
-
-                    b.ToTable("Streets");
-                });
-
             modelBuilder.Entity("ManagementSystem.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -634,21 +589,11 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Address", b =>
                 {
-                    b.HasOne("ManagementSystem.Domain.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("ManagementSystem.Domain.Entities.User", "User")
+                    b.HasOne("ManagementSystem.Domain.Entities.User", null)
                         .WithMany("Addresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("City");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Comment", b =>
@@ -701,17 +646,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("District");
-                });
-
-            modelBuilder.Entity("ManagementSystem.Domain.Entities.Street", b =>
-                {
-                    b.HasOne("ManagementSystem.Domain.Entities.Quarter", "Quarter")
-                        .WithMany("Streets")
-                        .HasForeignKey("QuarterId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Quarter");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.User", b =>
@@ -805,11 +739,6 @@ namespace ManagementSystem.Infrastructure.Migrations
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Project", b =>
                 {
                     b.Navigation("WorkTasks");
-                });
-
-            modelBuilder.Entity("ManagementSystem.Domain.Entities.Quarter", b =>
-                {
-                    b.Navigation("Streets");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Role", b =>

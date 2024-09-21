@@ -1,5 +1,5 @@
 ﻿using ManagementSystem.Domain.Models.Dto;
-using ManagementSystem.WebApi.Models.Comment.Response;
+using ManagementSystem.WebApi.Models.Response.Comment;
 
 namespace ManagementSystem.WebApi.MappingProfile.Comment
 {
