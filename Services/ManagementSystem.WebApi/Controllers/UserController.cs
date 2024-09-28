@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using ManagementSystem.Application.Features.Commands.User;
+using ManagementSystem.Application.Features.Queries.User;
+using ManagementSystem.WebApi.Models.Response.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

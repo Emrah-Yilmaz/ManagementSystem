@@ -4,16 +4,19 @@ using ManagementSystem.Domain.Models.Args.User;
 using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.PasswordEncryptor;
-using ManagementSystem.Domain.Persistence.Location;
+using ManagementSystem.Domain.Persistence.Department;
 using ManagementSystem.Domain.Persistence.User;
 using ManagementSystem.Domain.Services.Abstract.User;
 using ManagementSystem.Domain.Utilities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Packages.Exceptions.Types;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
+using System.Xml;
 
 namespace ManagementSystem.Domain.Services.Concrete.User
 {
@@ -22,13 +25,36 @@ namespace ManagementSystem.Domain.Services.Concrete.User
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-        private readonly IAddressRepository _addressRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
-        public UserService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper)
+        public UserService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper, IDepartmentRepository departmentRepository)
         {
             _userRepository = userRepository;
             _configuration = configuration;
             _mapper = mapper;
+            _departmentRepository = departmentRepository;
+        }
+
+        public async Task<bool> AddUserToDepartment(AddUserToDepartmentArgs args, CancellationToken cancellationToken = default)
+        {
+            var user = await _userRepository.GetByIdAsync(args.UserId);
+
+            if (user is null)
+                return default;
+            
+            var department = await _departmentRepository.GetByIdAsync(args.DepartmentId);
+            if (department is null)
+                return default;
+
+            user.DepartmentId = department.Id;
+
+            var result = await _userRepository.UpdateAsync(user, cancellationToken);
+            if (result == 0)
+            {
+                throw new Exception();
+            }
+
+            return true;
         }
 
         public async Task<int> CreateAsync(CreateUserArgs args, CancellationToken cancellationToken = default)
@@ -63,8 +89,26 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             user.Addresses ??= new List<Address>();
             user.Addresses.Add(userAddress);
             await _userRepository.UpdateAsync(user, cancellationToken);
-            //await _userRepository.SaveChangeAsync();
             return true;
+        }
+
+        public async Task<List<UserDto>> GetUsers(CancellationToken cancellationToken = default)
+        {
+            var users = await _userRepository.GetList(predicate: null,
+                noTracking: false,
+                orderBy: null,
+                includes: new Expression<Func<Domain.Entities.User, object>>[]
+                {
+                     d => d.Department,
+                     p => p.Projects
+                });
+
+            if (users is null || users.Count == 0)
+                return null;
+
+            var mappedResult = _mapper.Map<List<UserDto>>(users);
+
+            return mappedResult;
         }
 
         public async Task<LoginDto> LoginAsync(LoginArgs args, CancellationToken cancellationToken = default)
