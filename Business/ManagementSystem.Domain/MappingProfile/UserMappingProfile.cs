@@ -1,10 +1,4 @@
-﻿using ManagementSystem.Domain.Entities;
-using ManagementSystem.Domain.Models.Args.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ManagementSystem.Domain.Models.Args.User;
 
 namespace ManagementSystem.Domain.MappingProfile
 {
@@ -12,7 +6,7 @@ namespace ManagementSystem.Domain.MappingProfile
     {
         public UserMappingProfile()
         {
-            CreateMap<CreateUserArgs, User>();
+            CreateMap<CreateUserArgs, Domain.Entities.User>();
         }
     }
 }

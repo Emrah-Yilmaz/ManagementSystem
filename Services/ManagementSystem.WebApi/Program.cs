@@ -1,3 +1,4 @@
+using CommonLibrary.Options;
 using FluentValidation.AspNetCore;
 using ManagementSystem.Application.Extensions;
 using ManagementSystem.Domain.Extensions;
@@ -5,6 +6,7 @@ using ManagementSystem.Infrastructure.Extensions;
 using ManagementSystem.WebApi.Extensions;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Packages.Extensions;
@@ -18,6 +20,9 @@ builder.Services
     .AddControllers()
     .AddFluentValidation();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.Configure<LocationOptions>(builder.Configuration.GetSection("LocationOptions"));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplicationRegistration();
 builder.Services.AddWebApiRegistration();
@@ -27,6 +32,7 @@ builder.Services.AddStackExchangeRedisCache(opt => opt.Configuration = "localhos
 
 var rabbitMqHost = builder.Configuration["RabbitMQ:Host"];
 var rabbitMqPort = builder.Configuration["RabbitMQ:Port"];
+
 
 builder.Services.AddMassTransit(x =>
 {

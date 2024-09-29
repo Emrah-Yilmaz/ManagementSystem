@@ -3,7 +3,7 @@ using ManagementSystem.Application.Features.Commands.Department;
 using ManagementSystem.Application.Features.Commands.WorkTask;
 using ManagementSystem.Application.Features.Queries.Department;
 using ManagementSystem.Application.Features.Queries.WorkTask;
-using ManagementSystem.WebApi.Models.WorkTask.Response;
+using ManagementSystem.WebApi.Models.Response.WorkTask;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

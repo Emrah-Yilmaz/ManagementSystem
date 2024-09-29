@@ -5,6 +5,5 @@
         public string Name { get; set; }
         public required int DistrictId { get; set; }
         public  virtual District District { get; set; }
-        public virtual ICollection<Street>? Streets { get; set; }
     }
 }

@@ -3,15 +3,13 @@
     public class Address : BaseEntity
     {
         public int UserId { get; set; }
-        public virtual required User User { get; set; }
 
         public int CityId { get; set; }
-        public virtual required City City { get; set; }
 
         public int DistrictId { get; set; }
 
         public int QuerterId  { get; set; }
 
-        public int StreetId { get; set; }
+        public string Description { get; set; }
     }
 }

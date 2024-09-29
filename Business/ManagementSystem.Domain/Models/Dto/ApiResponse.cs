@@ -11,6 +11,6 @@ namespace ManagementSystem.Domain.Models.Dto
         public string Message { get; set; }
 
         [JsonPropertyName("data")]
-        public CountryData Data { get; set; }
+        public CountryResult Data { get; set; }
     }
 }

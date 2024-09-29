@@ -1,13 +1,9 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ManagementSystem.Domain.Models.Args.User;
+using MediatR;
 
 namespace ManagementSystem.Application.Features.Commands.User
 {
-    public class CreateUserAddressCommand : IRequest
+    public class CreateUserAddressCommand : CreateAddressArgs, IRequest<bool>
     {
     }
 }

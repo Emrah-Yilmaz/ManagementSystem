@@ -2,7 +2,7 @@
 using ManagementSystem.Application.Features.Commands.Department.Delete;
 using ManagementSystem.Domain.Models.Args.Department;
 using ManagementSystem.Domain.Models.Dto;
-using ManagementSystem.WebApi.Models.Department.Resposne;
+using ManagementSystem.WebApi.Models.Response.Department;
 
 namespace ManagementSystem.WebApi.MappingProfile.Department
 {

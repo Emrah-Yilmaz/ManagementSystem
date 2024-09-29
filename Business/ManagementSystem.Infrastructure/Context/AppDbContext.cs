@@ -33,13 +33,12 @@ namespace ManagementSystem.Infrastructure.Context
         public DbSet<City> Cities { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Quarter> Quarters { get; set; }
-        public DbSet<Street> Streets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement6; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement8; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -95,12 +94,6 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasForeignKey(p => p.ProjectId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // Address tablosuyla City tablosu arasındaki ilişkiyi belirtme
-            modelBuilder.Entity<Address>()
-                .HasOne(a => a.City)
-                .WithMany()
-                .HasForeignKey(a => a.CityId)
-                .OnDelete(DeleteBehavior.NoAction);
 
             // District tablosuyla City tablosu arasındaki ilişkiyi belirtme
             modelBuilder.Entity<District>()
@@ -116,17 +109,6 @@ namespace ManagementSystem.Infrastructure.Context
                 .WithMany(d => d.Quarters)
                 .HasForeignKey(q => q.DistrictId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-
-            // Street tablosuyla Quarter tablosu arasındaki ilişkiyi belirtme
-            modelBuilder.Entity<Street>()
-                .HasOne(s => s.Quarter)
-                .WithMany(q => q.Streets)
-                .HasForeignKey(s => s.QuarterId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-
-
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
@@ -178,7 +160,10 @@ namespace ManagementSystem.Infrastructure.Context
                     data.Entity.CreatedOn = DateTime.Now;
                     data.Entity.CreatedBy = string.Concat(claims.Name + " " + claims.LastName);
                     data.Entity.CreatedById = claims.Id;
-                    data.Entity.Status = StatusType.Pending.ToString();
+                    if (data.Entity.Status is null)
+                    {
+                        data.Entity.Status = StatusType.Pending.ToString();
+                    }
                     if (data.Entity is Comment)
                     {
                         var comment = (Comment)data.Entity;
