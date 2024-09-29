@@ -34,7 +34,7 @@ namespace ManagementSystem.WebApi.Controllers.Admin
                 return NotFound();
             }
             var mappedResponse = _mapper.Map<List<UsersResponse>>(result);
-            return Ok(result);
+            return Ok(mappedResponse);
         }
 
         [HttpPost("AddUserToDepartment")]

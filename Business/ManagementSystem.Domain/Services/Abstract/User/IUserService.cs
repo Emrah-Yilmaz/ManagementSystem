@@ -10,5 +10,6 @@ namespace ManagementSystem.Domain.Services.Abstract.User
         public Task<bool> CreateUserAddressAsync(CreateAddressArgs args, CancellationToken cancellationToken = default);
         Task<List<UserDto>> GetUsers(CancellationToken cancellationToken = default);
         Task<bool> AddUserToDepartment(AddUserToDepartmentArgs args, CancellationToken cancellationToken = default);
+        Task<bool> CreateUsersWithBogus(CancellationToken cancellationToken = default);
     }
 }

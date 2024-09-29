@@ -11,6 +11,7 @@ using ManagementSystem.Infrastructure.Persistence.City;
 using ManagementSystem.Infrastructure.Persistence.Comment;
 using ManagementSystem.Infrastructure.Persistence.Department;
 using ManagementSystem.Infrastructure.Persistence.Location;
+using ManagementSystem.Infrastructure.Persistence.Project;
 using ManagementSystem.Infrastructure.Persistence.User;
 using ManagementSystem.Infrastructure.Persistence.WorkTask;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,7 @@ namespace ManagementSystem.Infrastructure.Extensions
             services.AddScoped<IDistrictRepository, DistrictRepository>();
             services.AddScoped<IQuarterRepository, QuarterRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
             
             return services;
         }

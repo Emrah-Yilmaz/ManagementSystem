@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240921134049_removeaddresinfos2")]
-    partial class removeaddresinfos2
+    [Migration("20240928173920_mig1")]
+    partial class mig1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace ManagementSystem.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DepartmentProject", b =>
+                {
+                    b.Property<int>("DepartmentsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DepartmentsId", "ProjectsId");
+
+                    b.HasIndex("ProjectsId");
+
+                    b.ToTable("DepartmentProject");
+                });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Address", b =>
                 {
@@ -269,9 +284,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -291,9 +303,22 @@ namespace ManagementSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId");
-
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("ManagementSystem.Domain.Entities.ProjectUser", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "ProjectId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectUser", (string)null);
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Quarter", b =>
@@ -575,19 +600,19 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.ToTable("Task");
                 });
 
-            modelBuilder.Entity("ProjectUser", b =>
+            modelBuilder.Entity("DepartmentProject", b =>
                 {
-                    b.Property<int>("ProjectsId")
-                        .HasColumnType("int");
+                    b.HasOne("ManagementSystem.Domain.Entities.Department", null)
+                        .WithMany()
+                        .HasForeignKey("DepartmentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProjectsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ProjectUser");
+                    b.HasOne("ManagementSystem.Domain.Entities.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Address", b =>
@@ -629,15 +654,23 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Navigation("City");
                 });
 
-            modelBuilder.Entity("ManagementSystem.Domain.Entities.Project", b =>
+            modelBuilder.Entity("ManagementSystem.Domain.Entities.ProjectUser", b =>
                 {
-                    b.HasOne("ManagementSystem.Domain.Entities.Department", "Department")
-                        .WithMany("Projects")
-                        .HasForeignKey("DepartmentId")
+                    b.HasOne("ManagementSystem.Domain.Entities.Project", "Project")
+                        .WithMany("ProjectUsers")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Department");
+                    b.HasOne("ManagementSystem.Domain.Entities.User", "User")
+                        .WithMany("ProjectUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Quarter", b =>
@@ -707,21 +740,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("ProjectUser", b =>
-                {
-                    b.HasOne("ManagementSystem.Domain.Entities.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ManagementSystem.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ManagementSystem.Domain.Entities.City", b =>
                 {
                     b.Navigation("Districts");
@@ -729,8 +747,6 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Department", b =>
                 {
-                    b.Navigation("Projects");
-
                     b.Navigation("Users");
                 });
 
@@ -741,6 +757,8 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Project", b =>
                 {
+                    b.Navigation("ProjectUsers");
+
                     b.Navigation("WorkTasks");
                 });
 
@@ -754,6 +772,8 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("ProjectUsers");
 
                     b.Navigation("UserRoles");
 

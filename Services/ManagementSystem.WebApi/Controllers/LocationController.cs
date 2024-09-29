@@ -9,7 +9,7 @@ namespace ManagementSystem.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LocationController : ControllerBase
+    public class LocationController : BaseController
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;

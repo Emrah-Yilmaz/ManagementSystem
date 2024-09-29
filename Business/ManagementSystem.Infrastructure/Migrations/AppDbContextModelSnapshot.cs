@@ -22,6 +22,21 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DepartmentProject", b =>
+                {
+                    b.Property<int>("DepartmentsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DepartmentsId", "ProjectsId");
+
+                    b.HasIndex("ProjectsId");
+
+                    b.ToTable("DepartmentProject");
+                });
+
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Address", b =>
                 {
                     b.Property<int>("Id")
@@ -266,9 +281,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -287,8 +299,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Projects");
                 });
@@ -587,6 +597,21 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.ToTable("ProjectUser");
                 });
 
+            modelBuilder.Entity("DepartmentProject", b =>
+                {
+                    b.HasOne("ManagementSystem.Domain.Entities.Department", null)
+                        .WithMany()
+                        .HasForeignKey("DepartmentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ManagementSystem.Domain.Entities.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Address", b =>
                 {
                     b.HasOne("ManagementSystem.Domain.Entities.User", null)
@@ -624,17 +649,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("City");
-                });
-
-            modelBuilder.Entity("ManagementSystem.Domain.Entities.Project", b =>
-                {
-                    b.HasOne("ManagementSystem.Domain.Entities.Department", "Department")
-                        .WithMany("Projects")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Quarter", b =>
@@ -726,8 +740,6 @@ namespace ManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Department", b =>
                 {
-                    b.Navigation("Projects");
-
                     b.Navigation("Users");
                 });
 

@@ -11,7 +11,7 @@ namespace ManagementSystem.WebApi.MappingProfile.User
             CreateMap<LoginDto, LoginResponse>();
             CreateMap<UserDto, UsersResponse>()
                 .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects));
-            CreateMap<ProjectResponse, ProjectDto>();
+            CreateMap<ProjectDto, ProjectResponse>();
         }
     }
 }

@@ -38,7 +38,7 @@ namespace ManagementSystem.Infrastructure.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement6; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement8; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -109,14 +109,6 @@ namespace ManagementSystem.Infrastructure.Context
                 .WithMany(d => d.Quarters)
                 .HasForeignKey(q => q.DistrictId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-
-            //// Street tablosuyla Quarter tablosu arasındaki ilişkiyi belirtme
-            //modelBuilder.Entity<Street>()
-            //    .HasOne(s => s.Quarter)
-            //    .WithMany(q => q.Streets)
-            //    .HasForeignKey(s => s.QuarterId)
-            //    .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
