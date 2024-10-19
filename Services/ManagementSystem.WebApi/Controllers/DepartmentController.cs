@@ -112,5 +112,22 @@ namespace ManagementSystem.WebApi.Controllers
 
             return Ok(mappedResponse);
         }
+
+        [HttpGet("usersByDepartment")]
+        [ProducesResponseType(typeof(UsesrByDepartmentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUsersByDepartment([FromQuery] UsersByDepartmentQuery request, CancellationToken cancellationToken = default)
+        {
+            var result = await _mediator.Send(request);
+            if (result is null)
+            {
+                return NotFound();
+            }
+
+            var mappedResponse = _mapper.Map<UsesrByDepartmentResponse>(result);
+
+            return Ok(mappedResponse);
+        }
     }
 }

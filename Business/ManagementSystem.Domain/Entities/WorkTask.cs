@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ManagementSystem.Domain.Entities
+﻿namespace ManagementSystem.Domain.Entities
 {
     public class WorkTask : BaseEntity
     {

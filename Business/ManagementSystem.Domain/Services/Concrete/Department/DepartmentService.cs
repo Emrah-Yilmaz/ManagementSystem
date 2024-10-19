@@ -65,6 +65,13 @@ namespace ManagementSystem.Domain.Services.Concrete.Department
             return departments;
         }
 
+        public async Task<UsersByDepartmentDto> GetUsersByDepartment(GetDepartmentArgs args, CancellationToken cancellationToken = default)
+        {
+            var department = _repository.Get(d => d.Id == args.Id, false, u => u.Users).FirstOrDefault();
+            var mappedResult = _mapper.Map<UsersByDepartmentDto>(department);
+            return mappedResult;
+        }
+
         public async Task<int> UpdateAsync(UpdateDepartmenArgs args, CancellationToken cancellationToken = default)
         {
             var entity = await _repository.FindAsync(args.Id);

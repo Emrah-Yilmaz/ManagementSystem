@@ -129,7 +129,7 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             var departments = departmentFaker.Generate(15);
             var savedDepartments = await _departmentRepository.AddRangeAsync(departments);
 
-
+            
             var projectFaker = new Faker<Project>("tr")
                             .RuleFor(p => p.Name, f => f.Commerce.ProductName()) // Rastgele bir proje adı
                             .RuleFor(p => p.Users, f =>

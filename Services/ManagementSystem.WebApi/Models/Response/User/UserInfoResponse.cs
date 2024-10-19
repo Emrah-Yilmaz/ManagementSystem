@@ -1,6 +1,6 @@
 ﻿namespace ManagementSystem.WebApi.Models.Response.User
 {
-    public class UserInfoResposne
+    public class UserInfoResponse
     {
         public string Name { get; set; }
         public string LastName { get; set; }
