@@ -7,10 +7,11 @@ using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.PasswordEncryptor;
 using ManagementSystem.Domain.Persistence.Comment;
 using ManagementSystem.Domain.Persistence.Department;
+using ManagementSystem.Domain.Persistence.Location;
 using ManagementSystem.Domain.Persistence.User;
 using ManagementSystem.Domain.Services.Abstract.User;
 using ManagementSystem.Domain.Utilities;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Packages.Exceptions.Types;
@@ -18,7 +19,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
-using System.Xml;
+using System.Text.Json;
 
 namespace ManagementSystem.Domain.Services.Concrete.User
 {
@@ -29,14 +30,16 @@ namespace ManagementSystem.Domain.Services.Concrete.User
         private readonly IMapper _mapper;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IProjectRepository _projectRepository;
+        private readonly IAddressRepository _addressRepository;
 
-        public UserService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper, IDepartmentRepository departmentRepository, IProjectRepository projectRepository)
+        public UserService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper, IDepartmentRepository departmentRepository, IProjectRepository projectRepository, IAddressRepository addressRepository)
         {
             _userRepository = userRepository;
             _configuration = configuration;
             _mapper = mapper;
             _departmentRepository = departmentRepository;
             _projectRepository = projectRepository;
+            _addressRepository = addressRepository;
         }
 
         public async Task<bool> AddUserToDepartment(AddUserToDepartmentArgs args, CancellationToken cancellationToken = default)
@@ -161,6 +164,28 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             return true;
         }
 
+        public async Task<UserDto> GetUser(int userId, CancellationToken cancellationToken = default)
+        {
+            var user = _userRepository.GetThenInclude(
+                       predicate: u => u.Id == userId,
+                        noTracking: true,
+                        includes: new Func<IQueryable<Entities.User>, IQueryable<Entities.User>>[]
+                        {
+                            q => q.Include(d => d.Department),
+                            q => q.Include(p => p.Projects),
+                            q => q.Include(u => u.Addresses), // User'dan Addresses'e geçiş
+                            q => q.Include(u => u.Addresses).ThenInclude(a => a.City),// Address'ten City'e geçiş
+                            q => q.Include(u => u.Addresses).ThenInclude(a => a.District), // Address'ten City'e geçiş
+                            q => q.Include(u => u.Addresses).ThenInclude(a => a.Quarter) // Address'ten City'e geçiş
+                        }).FirstOrDefault();
+            if (user is null)
+                return null;
+
+            var adrresses = _addressRepository.Get(p => p.UserId == userId, false, c => c.City, d => d.District, q => q.Quarter);
+            var mappedResult =  _mapper.Map<UserDto>(user);
+            return mappedResult;
+        }
+
         public async Task<List<UserDto>> GetUsers(CancellationToken cancellationToken = default)
         {
             var users = await _userRepository.GetList(predicate: null,
@@ -182,7 +207,7 @@ namespace ManagementSystem.Domain.Services.Concrete.User
 
         public async Task<LoginDto> LoginAsync(LoginArgs args, CancellationToken cancellationToken = default)
         {
-            var dbUser = await _userRepository.SingleOrDefaultAsync(u => u.Email == args.Email);
+            var dbUser =  _userRepository.GetThenInclude(u => u.Email == args.Email, false, q => q.Include(ur => ur.UserRoles).ThenInclude(role => role.Role)).FirstOrDefault();
             if (dbUser is null)
                 return null;
 
@@ -200,19 +225,33 @@ namespace ManagementSystem.Domain.Services.Concrete.User
                 LastName = dbUser.LastName,
                 UserName = dbUser.UserName,
             };
-
+            var userRole = dbUser.UserRoles?.Select(p => p.Role.Name).FirstOrDefault();
             var claims = new Claim[]
             {
-                new Claim(Shared.JwtClaims.UserId, dbUser.Id.ToString()),
                 new Claim(Shared.JwtClaims.Email, dbUser.Email),
                 new Claim(Shared.JwtClaims.FirstName, dbUser.Name),
                 new Claim(Shared.JwtClaims.LastName, dbUser.LastName),
-                new Claim(Shared.JwtClaims.UserName, dbUser.UserName)
+                new Claim(Shared.JwtClaims.UserName, dbUser.UserName),
+                new Claim(Shared.JwtClaims.Role, userRole ?? null)
             };
 
             model.Token = GenerateToken(claims);
 
             return model;
+        }
+
+        public async Task<int> UpdateUserAddressAsync(UpdateAddressArgs args, CancellationToken cancellationToken = default)
+        {
+            var address = await _addressRepository.GetByIdAsync(args.Id);
+            if (address is null)
+                return default;
+            
+            var entity = args.Modify(address);
+            var result = await _addressRepository.UpdateAsync(entity, cancellationToken);
+            if (result == 0)
+                return default;
+
+            return result;
         }
 
         private string GenerateToken(Claim[] claims)

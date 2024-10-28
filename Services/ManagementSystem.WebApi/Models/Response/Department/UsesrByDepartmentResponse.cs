@@ -7,6 +7,6 @@ namespace ManagementSystem.WebApi.Models.Response.Department
         public int DepartmentId { get; set; }
         public string Department { get; set; }
         public int WorkersCount { get; set; }
-        public IList<UserInfoResponse> UserInfoResposnes { get; set; }
+        public IList<UserInfoResponse> Users { get; set; }
     }
 }

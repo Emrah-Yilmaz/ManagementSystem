@@ -4,9 +4,11 @@ using CommonLibrary.Extensions;
 using CommonLibrary.Features.Paginations;
 using ManagementSystem.Domain.Models.Args.Department;
 using ManagementSystem.Domain.Models.Dto;
+using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.Persistence.Department;
 using ManagementSystem.Domain.Services.Abstract.Department;
 using ManagementSystem.Domain.TokenHandler;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -67,7 +69,10 @@ namespace ManagementSystem.Domain.Services.Concrete.Department
 
         public async Task<UsersByDepartmentDto> GetUsersByDepartment(GetDepartmentArgs args, CancellationToken cancellationToken = default)
         {
-            var department = _repository.Get(d => d.Id == args.Id, false, u => u.Users).FirstOrDefault();
+            var department = _repository.Get(
+                predicate: d => d.Id == args.Id,
+                noTracking: false,
+                includes: u => u.Users).FirstOrDefault();
             var mappedResult = _mapper.Map<UsersByDepartmentDto>(department);
             return mappedResult;
         }

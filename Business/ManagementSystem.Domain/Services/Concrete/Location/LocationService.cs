@@ -74,6 +74,10 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
 
             foreach (var city in cities)
             {
+                if (city.Name == "İstanbul" || city.Name == "Istanbul")
+                {
+                    string test = string.Empty;
+                }
                 var apiResponse = await _locationManager.GetDistrictsAsync(city.Name.ToLower(), cancellationToken);
                 if (apiResponse.Status != "OK")
                     continue;

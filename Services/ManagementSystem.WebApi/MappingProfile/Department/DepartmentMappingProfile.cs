@@ -17,7 +17,7 @@ namespace ManagementSystem.WebApi.MappingProfile.Department
             CreateMap<DepartmentResponse, DepartmentDto>().ReverseMap();
             CreateMap<DeleteDepartmentCommand, GetDepartmentArgs>().ReverseMap();
             CreateMap<UsesrByDepartmentResponse, UsersByDepartmentDto>()
-                .ForMember(dest => dest.Users, opt => opt.MapFrom(src => src.UserInfoResposnes))
+                .ForMember(dest => dest.Users, opt => opt.MapFrom(src => src.Users))
                 .ReverseMap();
             CreateMap<UserInfoResponse, UserDto>().ReverseMap();
         }

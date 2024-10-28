@@ -1,4 +1,6 @@
-﻿namespace ManagementSystem.Domain.Models.Args.Department
+﻿using ManagementSystem.Domain.Models.Enums;
+
+namespace ManagementSystem.Domain.Models.Args.Department
 {
     public class GetDepartmentArgs
     {

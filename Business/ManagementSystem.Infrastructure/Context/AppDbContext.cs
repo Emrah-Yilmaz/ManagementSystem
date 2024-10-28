@@ -94,6 +94,11 @@ namespace ManagementSystem.Infrastructure.Context
                 .HasForeignKey(p => p.ProjectId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.User)
+                .WithMany(u => u.Addresses) // User entity'sinde Addresses koleksiyonunu ekleyin
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // District tablosuyla City tablosu arasındaki ilişkiyi belirtme
             modelBuilder.Entity<District>()
@@ -109,6 +114,32 @@ namespace ManagementSystem.Infrastructure.Context
                 .WithMany(d => d.Quarters)
                 .HasForeignKey(q => q.DistrictId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Address>()
+                .HasKey(a => a.Id);
+
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.City)
+                .WithMany()
+                .HasForeignKey(a => a.CityId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.District)
+                .WithMany()
+                .HasForeignKey(a => a.DistrictId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.Quarter)
+                .WithMany()
+                .HasForeignKey(a => a.QuerterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Address>()
+                .Property(a => a.Description)
+                .HasMaxLength(500);
+
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
