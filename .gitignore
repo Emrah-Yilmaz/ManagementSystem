@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 Services/ManagementSystem.WebApi/Properties/launchSettings.json
 /Services/ManagementSystem.WebApi/Properties/launchSettings.json
+/Notifications/ManagementSystem.Notification/appsettings.json
+/Notifications/ManagementSystem.Notification/appsettings.json
+/Notifications/ManagementSystem.Notification/appsettings.json

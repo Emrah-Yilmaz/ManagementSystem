@@ -1,5 +1,9 @@
+using CommonLibrary.Options.Email;
 using ManagementSystem.Notification.Consumers.EmailConsumers;
+using ManagementSystem.Notification.Services;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,12 +33,15 @@ builder.Services.AddMassTransit(x =>
             e.ConfigureConsumer<SendEmailConsumer>(context);
         });
     });
+    builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailSettings"));
+    builder.Services.AddScoped<IEmailService, EmailService>();
 }).BuildServiceProvider();
 #pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
 
 builder.Services.AddMassTransitHostedService();
 builder.Services.AddControllers();
 var app = builder.Build();
+
 
 
 if (app.Environment.IsDevelopment())

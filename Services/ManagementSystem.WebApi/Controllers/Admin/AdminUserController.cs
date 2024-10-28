@@ -37,7 +37,7 @@ namespace ManagementSystem.WebApi.Controllers.Admin
             return Ok(mappedResponse);
         }
 
-        [HttpPost("AddUserToDepartment")]
+        [HttpPost("AddToDepartment")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [AllowAnonymous]

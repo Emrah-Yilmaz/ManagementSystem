@@ -1,9 +1,9 @@
-﻿using MediatR;
+﻿using CommonLibrary.Messages;
+using MediatR;
 
 namespace ManagementSystem.Application.Events.DepartmentEvents
 {
-    public class SendEmailEvent : INotification
+    public class SendEmailEvent : CreatedDepartmentMessage, INotification
     {
-        public int Id { get; set; }
     }
 }
