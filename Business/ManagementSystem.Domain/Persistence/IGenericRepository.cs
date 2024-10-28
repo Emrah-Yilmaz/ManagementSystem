@@ -1,4 +1,5 @@
 ﻿using ManagementSystem.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace ManagementSystem.Domain.Persistence
@@ -34,6 +35,9 @@ namespace ManagementSystem.Domain.Persistence
         IQueryable<TEntity> AsQueryable();
         Task<List<TEntity>> SearchAsync(params (Expression<Func<TEntity, string>> property, string searchTerm)[] searchTerms);
 
-
+        IQueryable<TEntity> GetThenInclude(
+            Expression<Func<TEntity, bool>> predicate,
+            bool noTracking = true,
+            params Func<IQueryable<TEntity>, IQueryable<TEntity>>[] includes);
     }
 }

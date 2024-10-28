@@ -3,6 +3,7 @@ using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.Persistence;
 using ManagementSystem.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 using NLog.Filters;
 using System.Linq.Expressions;
 
@@ -339,6 +340,22 @@ namespace ManagementSystem.Infrastructure.Persistence
             var containsExpression = Expression.Call(propertyAccess, "Contains", Type.EmptyTypes, searchTermExpression);
 
             return Expression.Lambda<Func<TEntity, bool>>(containsExpression, parameter);
+        }
+
+        public IQueryable<TEntity> GetThenInclude(
+        Expression<Func<TEntity, bool>> predicate,
+        bool noTracking = true,
+        params Func<IQueryable<TEntity>, IQueryable<TEntity>>[] includes)
+        {
+            var query = noTracking ? _dbContext.Set<TEntity>().AsNoTracking() : _dbContext.Set<TEntity>();
+            query = query.Where(predicate);
+
+            foreach (var include in includes)
+            {
+                query = include(query);
+            }
+
+            return query;
         }
     }
 }

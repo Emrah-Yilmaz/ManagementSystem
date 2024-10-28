@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Packages.Loggings.SeriLog;
 using Packages.Loggings.SeriLog.Loggers;
+using Packages.Pipelines.Authorization;
 using Packages.Pipelines.Caching;
 using Packages.Pipelines.Logging;
 using System.Reflection;
@@ -22,12 +23,14 @@ namespace ManagementSystem.Application.Extensions
                 configuration.AddOpenBehavior(typeof(CachingBehavior<,>));
                 configuration.AddOpenBehavior(typeof(CacheRemovingBehavior<,>));
                 configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
+                configuration.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             });
 
             services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters();
             services.AddValidatorsFromAssemblyContaining<GetWorkTasksQueryValidator>();
             services.AddSingleton<LoggerServiceBase, FileLogger>();
+            services.AddHttpContextAccessor();
 
             return services;
         }

@@ -4,6 +4,7 @@ using ManagementSystem.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027095841_addressmig")]
+    partial class addressmig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -639,10 +642,10 @@ namespace ManagementSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ManagementSystem.Domain.Entities.User", "User")
+                    b.HasOne("ManagementSystem.Domain.Entities.User", null)
                         .WithMany("Addresses")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("City");
@@ -650,8 +653,6 @@ namespace ManagementSystem.Infrastructure.Migrations
                     b.Navigation("District");
 
                     b.Navigation("Quarter");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ManagementSystem.Domain.Entities.Comment", b =>

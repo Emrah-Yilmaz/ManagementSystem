@@ -10,6 +10,7 @@
             public const string UserName = "UserName";
             public const string Email = "Email";
             public const string Unknown = "Unknown";
+            public const string Role = "role";
         }
     }
 }

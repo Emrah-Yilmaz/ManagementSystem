@@ -4,11 +4,9 @@ using ManagementSystem.Application.Features.Commands.Department.Create;
 using ManagementSystem.Application.Features.Commands.Department.Delete;
 using ManagementSystem.Application.Features.Commands.Department.Update;
 using ManagementSystem.Application.Features.Queries.Department;
-using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.WebApi.Models.Request.Department;
 using ManagementSystem.WebApi.Models.Response.Department;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManagementSystem.WebApi.Controllers
@@ -113,7 +111,7 @@ namespace ManagementSystem.WebApi.Controllers
             return Ok(mappedResponse);
         }
 
-        [HttpGet("usersByDepartment")]
+        [HttpGet("withUsers")]
         [ProducesResponseType(typeof(UsesrByDepartmentResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

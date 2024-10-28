@@ -11,6 +11,7 @@ namespace ManagementSystem.WebApi.MappingProfile.Location
             CreateMap<CityDto, CitiesResponse>();
             CreateMap<DistrictDto, DistrictsResponse>();
             CreateMap<QuarterDto, QuartersResponse>();
+            CreateMap<AddressDto, AddressResponse>();
         }
     }
 }
