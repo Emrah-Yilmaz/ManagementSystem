@@ -11,6 +11,7 @@ namespace ManagementSystem.Domain.Services.Abstract.User
         Task<List<UserDto>> GetUsers(CancellationToken cancellationToken = default);
         Task<UserDto> GetUser(int userId, CancellationToken cancellationToken = default);
         Task<bool> AddUserToDepartment(AddUserToDepartmentArgs args, CancellationToken cancellationToken = default);
+        Task<bool> AssignUserToProjectAsync(AssignUserToProjectArgs args, CancellationToken cancellationToken = default);
         Task<bool> CreateUsersWithBogus(CancellationToken cancellationToken = default);
         Task<int> UpdateUserAddressAsync(UpdateAddressArgs args, CancellationToken cancellationToken = default);
     }

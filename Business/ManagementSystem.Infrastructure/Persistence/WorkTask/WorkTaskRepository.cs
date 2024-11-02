@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ManagementSystem.Infrastructure.Persistence.WorkTask
 {
-    public class WorkTaskRepository : GenericRepository<Domain.Entities.WorkTask>, IWorkTaskRepository
+    public class WorkTaskRepository : Repository<Domain.Entities.WorkTask>, IWorkTaskRepository
     {
         private readonly AppDbContext _context;
         public WorkTaskRepository(AppDbContext dbContext) : base(dbContext)

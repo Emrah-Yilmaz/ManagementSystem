@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ManagementSystem.Infrastructure.Persistence.Project
 {
-    public class ProjectRepository : GenericRepository<Domain.Entities.Project>, IProjectRepository
+    public class ProjectRepository : Repository<Domain.Entities.Project>, IProjectRepository
     {
         public ProjectRepository(AppDbContext dbContext) : base(dbContext)
         {

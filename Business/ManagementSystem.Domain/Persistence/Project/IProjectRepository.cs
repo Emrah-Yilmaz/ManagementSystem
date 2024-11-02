@@ -1,6 +1,6 @@
 ﻿namespace ManagementSystem.Domain.Persistence.Comment
 {
-    public interface IProjectRepository : IGenericRepository<Domain.Entities.Project>
+    public interface IProjectRepository : IRepository<Domain.Entities.Project>
     {
     }
 }

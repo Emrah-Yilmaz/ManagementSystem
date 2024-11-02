@@ -11,8 +11,7 @@ namespace ManagementSystem.WebApi.Models.Response.User
         public string LastName { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
-        public List<ProjectResponse>? Projects { get; set; }
         public List<AddressResponse>? Addresses { get; set; }
-        public DepartmentResponse? Department { get; set; }
+        public DepartmentOfUserResponse? Department { get; set; }
     }
 }

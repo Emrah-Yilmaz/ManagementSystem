@@ -1,6 +1,6 @@
 ﻿namespace ManagementSystem.Domain.Persistence.City
 {
-    public interface IDistrictRepository :  IGenericRepository<Domain.Entities.District>
+    public interface IDistrictRepository : IRepository<Domain.Entities.District>
     {
     }
 }

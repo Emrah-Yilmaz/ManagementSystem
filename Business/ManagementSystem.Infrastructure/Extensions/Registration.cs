@@ -7,6 +7,7 @@ using ManagementSystem.Domain.Persistence.WorkTask;
 using ManagementSystem.Domain.Ports;
 using ManagementSystem.Infrastructure.Adapters;
 using ManagementSystem.Infrastructure.Context;
+using ManagementSystem.Infrastructure.Persistence;
 using ManagementSystem.Infrastructure.Persistence.City;
 using ManagementSystem.Infrastructure.Persistence.Comment;
 using ManagementSystem.Infrastructure.Persistence.Department;
@@ -17,6 +18,7 @@ using ManagementSystem.Infrastructure.Persistence.WorkTask;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nest;
 
 namespace ManagementSystem.Infrastructure.Extensions
 {
@@ -45,7 +47,8 @@ namespace ManagementSystem.Infrastructure.Extensions
             services.AddScoped<IQuarterRepository, QuarterRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
-            
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); // TContext burada AppDbContext olacak
+
             return services;
         }
     }

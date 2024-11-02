@@ -10,5 +10,6 @@
         public string? CreatedBy { get; set; }
         public int? ModifiedById { get; set; }
         public string? ModifiedBy { get; set; }
+        public List<ProjectDto>? Projects { get; set; }
     }
 }

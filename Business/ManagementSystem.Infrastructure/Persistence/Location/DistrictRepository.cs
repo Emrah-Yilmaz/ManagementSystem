@@ -3,7 +3,7 @@ using ManagementSystem.Infrastructure.Context;
 
 namespace ManagementSystem.Infrastructure.Persistence.Location
 {
-    public class DistrictRepository : GenericRepository<Domain.Entities.District>, IDistrictRepository
+    public class DistrictRepository : Repository<Domain.Entities.District>, IDistrictRepository
     {
         public DistrictRepository(AppDbContext dbContext) : base(dbContext)
         {

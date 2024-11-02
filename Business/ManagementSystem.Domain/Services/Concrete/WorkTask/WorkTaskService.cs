@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ManagementSystem.Domain.Entities;
 using ManagementSystem.Domain.Models.Args.WorkTask;
 using ManagementSystem.Domain.Models.Dto;
 using ManagementSystem.Domain.Persistence.WorkTask;
@@ -51,7 +50,16 @@ namespace ManagementSystem.Domain.Services.Concrete.WorkTask
 
         public async Task<IList<WorkTasksDto>> GetWorkTasksAsync(GetWorkTasksArgs args, CancellationToken cancellationToken = default)
         {
-            var result = await _workTaskRepository.GetList(p => p.Id > 0, false, null, x => x.Department, z => z.AssignedUser, w => w.Comments);
+            var result = await _workTaskRepository.GetListAsync(
+                predicate:p => p.Id > 0, 
+                noTracking:false, 
+                cancellationToken: default, 
+                orderBy:null, 
+                includes: [
+                    x => x.Department, 
+                    z => z.AssignedUser,
+                    w => w.Comments
+                    ]);
 
             if (!string.IsNullOrEmpty(args.Title))
             {

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Packages.Exceptions.Types;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
@@ -62,6 +63,33 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             }
 
             return true;
+        }
+
+        public async Task<bool> AssignUserToProjectAsync(AssignUserToProjectArgs args, CancellationToken cancellationToken = default)
+        {
+            var user = await _userRepository.FirstOrDefaultAsync(
+                predicate: u => u.Id == args.UserId,
+                noTracking: false,
+                cancellationToken: default,
+                includes: p => p.Projects);
+                
+
+            if (user is null)
+                return false;
+
+            var project = await _projectRepository.FirstOrDefaultAsync(
+                predicate: p => p.Id == args.ProjectId,
+                noTracking: false,
+                cancellationToken: default,
+                includes: u => u.Users);
+
+            if (project is null)
+                return false;
+
+            user.Projects.Add(project);
+            project.Users.Add(user);
+            var result = await _userRepository.SaveChangeAsync(cancellationToken);
+            return result > 0;
         }
 
         public async Task<int> CreateAsync(CreateUserArgs args, CancellationToken cancellationToken = default)
@@ -171,8 +199,7 @@ namespace ManagementSystem.Domain.Services.Concrete.User
                         noTracking: true,
                         includes: new Func<IQueryable<Entities.User>, IQueryable<Entities.User>>[]
                         {
-                            q => q.Include(d => d.Department),
-                            q => q.Include(p => p.Projects),
+                            q => q.Include(d => d.Department).ThenInclude(p => p.Projects),
                             q => q.Include(u => u.Addresses), // User'dan Addresses'e geçiş
                             q => q.Include(u => u.Addresses).ThenInclude(a => a.City),// Address'ten City'e geçiş
                             q => q.Include(u => u.Addresses).ThenInclude(a => a.District), // Address'ten City'e geçiş
@@ -188,7 +215,7 @@ namespace ManagementSystem.Domain.Services.Concrete.User
 
         public async Task<List<UserDto>> GetUsers(CancellationToken cancellationToken = default)
         {
-            var users = await _userRepository.GetList(predicate: null,
+            var users = await _userRepository.GetListAsync(predicate: null,
                 noTracking: false,
                 orderBy: null,
                 includes: new Expression<Func<Domain.Entities.User, object>>[]
@@ -229,6 +256,8 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             var userRole = dbUser.UserRoles?.Select(p => p.Role.Name)?.FirstOrDefault() ?? Roles.None.ToString();
             var claims = new Claim[]
             {
+
+                new Claim(Shared.JwtClaims.UserId, dbUser.Id.ToString()),
                 new Claim(Shared.JwtClaims.Email, dbUser.Email),
                 new Claim(Shared.JwtClaims.FirstName, dbUser.Name),
                 new Claim(Shared.JwtClaims.LastName, dbUser.LastName),

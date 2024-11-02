@@ -1,6 +1,6 @@
 ﻿namespace ManagementSystem.Domain.Persistence.Department
 {
-    public interface IDepartmentRepository : IGenericRepository<Domain.Entities.Department>
+    public interface IDepartmentRepository : IRepository<Domain.Entities.Department>
     {
     }
 }
