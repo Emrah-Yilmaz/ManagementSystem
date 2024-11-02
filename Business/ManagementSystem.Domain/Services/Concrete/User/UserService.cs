@@ -207,7 +207,7 @@ namespace ManagementSystem.Domain.Services.Concrete.User
 
         public async Task<LoginDto> LoginAsync(LoginArgs args, CancellationToken cancellationToken = default)
         {
-            var dbUser =  _userRepository.GetThenInclude(u => u.Email == args.Email, false, q => q.Include(ur => ur.UserRoles).ThenInclude(role => role.Role)).FirstOrDefault();
+            var dbUser =  _userRepository.GetThenInclude(u => u.UserName == args.UserName, false, q => q.Include(ur => ur.UserRoles).ThenInclude(role => role.Role)).FirstOrDefault();
             if (dbUser is null)
                 return null;
 
@@ -225,7 +225,8 @@ namespace ManagementSystem.Domain.Services.Concrete.User
                 LastName = dbUser.LastName,
                 UserName = dbUser.UserName,
             };
-            var userRole = dbUser.UserRoles?.Select(p => p.Role.Name).FirstOrDefault();
+
+            var userRole = dbUser.UserRoles?.Select(p => p.Role.Name)?.FirstOrDefault() ?? Roles.None.ToString();
             var claims = new Claim[]
             {
                 new Claim(Shared.JwtClaims.Email, dbUser.Email),

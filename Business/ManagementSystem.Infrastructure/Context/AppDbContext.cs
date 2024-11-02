@@ -3,6 +3,7 @@ using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.TokenHandler;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ManagementSystem.Infrastructure.Context
@@ -33,12 +34,14 @@ namespace ManagementSystem.Infrastructure.Context
         public DbSet<City> Cities { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Quarter> Quarters { get; set; }
+        public DbSet<StatusChangeLog> StatusChangeLogs { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "server=.\\;database=ProjectManagement8; integrated security=true; TrustServerCertificate=true;";
+                var connStr = "server=.\\;database=ProjectManagement; integrated security=true; TrustServerCertificate=true;";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
@@ -51,7 +54,7 @@ namespace ManagementSystem.Infrastructure.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<UserRole>()
-                .HasKey(ur => new { ur.UserId, ur.RoleId });
+                .HasKey(ur => ur.Id);
 
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.User)
@@ -180,41 +183,102 @@ namespace ManagementSystem.Infrastructure.Context
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            // ChangeTracker'dan liste oluştur
+            var entries = ChangeTracker.Entries<BaseEntity>().ToList();
+            var claims = _domainPrincipal.GetClaims(); // Kullanıcı bilgilerini al
+            var statusChangeLogs = new List<StatusChangeLog>(); // Log kayıtları için liste
 
-            var datas = ChangeTracker.Entries<BaseEntity>();
-            var claims = _domainPrincipal.GetClaims();
-
-            foreach (var data in datas)
+            foreach (var data in entries)
             {
+                int recordId = data.Property("Id").CurrentValue != null ? (int)data.Property("Id").CurrentValue : 0; // ID'yi almak için kontrol et
+
                 if (data.State == EntityState.Added)
                 {
+                    // Yeni kayıt için oluşturma işlemleri
                     data.Entity.CreatedOn = DateTime.Now;
-                    data.Entity.CreatedBy = string.Concat(claims.Name + " " + claims.LastName);
+                    data.Entity.CreatedBy = string.Concat(claims.Name, " ", claims.LastName);
                     data.Entity.CreatedById = claims.Id;
+
                     if (data.Entity.Status is null)
                     {
-                        data.Entity.Status = StatusType.Pending.ToString();
+                        data.Entity.Status = StatusType.Pending.ToString(); // Varsayılan status
                     }
-                    if (data.Entity is Comment)
+
+                    if (data.Entity is Comment comment)
                     {
-                        var comment = (Comment)data.Entity;
                         if (comment.Status != StatusType.Published.ToString())
                         {
-                            comment.Status = StatusType.Published.ToString();
+                            comment.Status = StatusType.Published.ToString(); // Durum değişikliği
                         }
                     }
+
+                    // Log kaydı oluştur
+                    var log = new StatusChangeLog
+                    {
+                        TableName = data.Metadata.GetTableName(),
+                        RecordId = default,
+                        OldStatus = null, // Yeni ekleniyor, eski durum yok
+                        NewStatus = data.Entity.Status,
+                        ChangedBy = JsonSerializer.Serialize(new ChangedByInfo
+                        {
+                            Id = claims.Id,
+                            Name = claims.Name,
+                            Surname = claims.LastName
+                        }, new JsonSerializerOptions
+                        {
+                            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Özel karakterler için esnek kodlama
+                        }),
+                        ChangedDate = DateTime.Now,
+                        Status = StatusType.New.ToString()
+                    };
+                    statusChangeLogs.Add(log); // Log kaydını listeye ekle
                 }
                 else if (data.State == EntityState.Modified)
                 {
+                    // Güncelleme işlemleri
                     data.Entity.ModifiedOn = DateTime.Now;
-                    data.Entity.ModifiedBy = string.Concat(claims.Name + " " + claims.LastName);
+                    data.Entity.ModifiedBy = string.Concat(claims.Name, " ", claims.LastName);
                     data.Entity.ModifiedById = claims.Id;
+
+                    // Status alanını kontrol et ve log ekle
+                    if (data.Properties.Any(p => p.Metadata.Name == "Status" && p.IsModified))
+                    {
+                        var oldStatus = data.Property("Status").OriginalValue?.ToString();
+                        var newStatus = data.Property("Status").CurrentValue?.ToString();
+
+                        // Log kaydı oluştur
+                        var log = new StatusChangeLog
+                        {
+                            TableName = data.Metadata.GetTableName(),
+                            RecordId = (int)data.Property("Id").CurrentValue,
+                            OldStatus = oldStatus,
+                            NewStatus = newStatus,
+                            ChangedBy = JsonSerializer.Serialize(new ChangedByInfo
+                            {
+                                Id = claims.Id,
+                                Name = claims.Name,
+                                Surname = claims.LastName
+                            }, new JsonSerializerOptions
+                            {
+                                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Özel karakterler için esnek kodlama
+                            }),
+                            ChangedDate = DateTime.Now,
+                            Status = StatusType.Published.ToString()
+                        };
+                        statusChangeLogs.Add(log); // Log kaydını listeye ekle
+                    }
                 }
             }
 
-            return await base.SaveChangesAsync(cancellationToken);
-        }
+            // Log kayıtlarını veritabanına ekle
+            if (statusChangeLogs.Any())
+            {
+                StatusChangeLogs.AddRange(statusChangeLogs); // Tüm logları ekle
+            }
 
+            // Veritabanına değişiklikleri kaydet
+            return await base.SaveChangesAsync(cancellationToken); // Değişiklikleri kaydet
+        }
     }
 }
 

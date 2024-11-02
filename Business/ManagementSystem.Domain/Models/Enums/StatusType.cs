@@ -7,6 +7,7 @@
         Published = 3,
         Completd = 4,
         Declined = 5,
-        Deleted = 6
+        Deleted = 6,
+        New = 7
     }
 }
