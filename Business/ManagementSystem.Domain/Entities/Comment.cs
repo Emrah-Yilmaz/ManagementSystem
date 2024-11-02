@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Packages.Repositories.EfCore.Entity;
 
 namespace ManagementSystem.Domain.Entities
 {

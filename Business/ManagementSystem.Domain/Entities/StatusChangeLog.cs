@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Packages.Repositories.EfCore.Entity;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 
 namespace ManagementSystem.Domain.Entities

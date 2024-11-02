@@ -10,15 +10,15 @@ namespace ManagementSystem.WebApi.MappingProfile.User
         {
             CreateMap<LoginDto, LoginResponse>();
             CreateMap<UserDto, UsersResponse>()
-                .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects));
+                .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Department.Projects));
 
             CreateMap<UserDto, UserResponse>()
-                .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects))
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department))
                 .ForMember(dest => dest.Addresses, opt => opt.MapFrom(src => src.Addresses));
 
             CreateMap<ProjectDto, ProjectResponse>();
             CreateMap<ProjectDto, ProjectResponse>();
+            CreateMap<DepartmentDto, DepartmentOfUserResponse>();
         }
     }
 }

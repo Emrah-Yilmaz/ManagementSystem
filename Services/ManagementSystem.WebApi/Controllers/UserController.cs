@@ -90,6 +90,45 @@ namespace ManagementSystem.WebApi.Controllers
             return Ok(mappedResult);
         }
 
+        [HttpPost("AssignDepartment")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
+        public async Task<IActionResult> AssignDepartment(AddUserToDepartmentCommand request, CancellationToken cancellationToken = default)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
 
+            if (!result)
+                return BadRequest();
+
+            return Ok(result);
+        }
+        [HttpPost("AssignProject")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AssignProject(AssignProjectCommand request, CancellationToken cancellationToken = default)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+
+            if (!result)
+                return BadRequest();
+
+            return Ok(result);
+        }
+        [HttpGet("UsersWithRelations")]
+        [ProducesResponseType(typeof(List<UsersResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUsersWithRelations(CancellationToken cancellationToken = default)
+        {
+            var query = new GetUsersQuery();
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (result is null || result.Count == 0)
+            {
+                return NotFound();
+            }
+            var mappedResponse = _mapper.Map<List<UsersResponse>>(result);
+            return Ok(mappedResponse);
+        }
     }
 }

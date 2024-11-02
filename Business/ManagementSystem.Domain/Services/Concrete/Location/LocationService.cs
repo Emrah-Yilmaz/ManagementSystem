@@ -67,7 +67,7 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
 
         public async Task<bool> CreateDistrictsAsync(CancellationToken cancellationToken = default)
         {
-            var cities = await _cityRepository.GetAll();
+            var cities = await _cityRepository.GetAllAsync(false, cancellationToken);
             if (cities is null || cities.Count == 0)
                 return false;
 
@@ -108,7 +108,7 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
 
         public async Task<bool> CreateQuartersAsync(CancellationToken cancellationToken = default)
         {
-            var districts = await _districtRepository.GetAll();
+            var districts = await _districtRepository.GetAllAsync(false, default);
             if (districts is null || districts.Count == 0)
                 return false;
 
@@ -149,7 +149,7 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
 
         public async Task<List<CityDto>?> GetCitiesAsync(CancellationToken cancellationToken = default)
         {
-            var cities = await _cityRepository.GetAll();
+            var cities = await _cityRepository.GetAllAsync(false, default);
 
             if (cities is null || cities.Count == 0)
                 return null;
@@ -160,7 +160,10 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
 
         public async Task<List<DistrictDto>?> GetDistrictsByCityIdAsync(int cityId, CancellationToken cancellationToken = default)
         {
-            var districts = await _districtRepository.GetList(d => d.CityId == cityId);
+            var districts = await _districtRepository.GetListAsync(
+                predicate: d => d.CityId == cityId,
+                noTracking: false,
+                cancellationToken: default);
 
             if (districts is null || districts.Count == 0)
                 return null;
@@ -171,10 +174,9 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
 
         public async Task<List<QuarterDto>?> GetQuartersByDistrictIdAsync(int districtId, CancellationToken cancellationToken = default)
         {
-            var quarters = await _quarterRepository.GetList(predicate: p => p.DistrictId == districtId,
+            var quarters = await _quarterRepository.GetListAsync(predicate: p => p.DistrictId == districtId,
                                                             noTracking: false,
-                                                            orderBy: null,
-                                                            includes: null);
+                                                            cancellationToken: default);
 
             if (quarters is null || quarters.Count == 0)
                 return null;

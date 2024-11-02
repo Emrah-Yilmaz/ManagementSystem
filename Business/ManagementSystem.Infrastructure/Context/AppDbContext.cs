@@ -2,9 +2,12 @@
 using ManagementSystem.Domain.Models.Enums;
 using ManagementSystem.Domain.TokenHandler;
 using Microsoft.EntityFrameworkCore;
+using Packages.Repositories.EfCore.Entity;
+using Packages.Repositories.Enums;
 using System.Reflection;
 using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using StatusType = ManagementSystem.Domain.Models.Enums.StatusType;
 
 namespace ManagementSystem.Infrastructure.Context
 {

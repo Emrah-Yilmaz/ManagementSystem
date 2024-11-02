@@ -1,6 +1,4 @@
-﻿using ManagementSystem.Domain.Entities;
-
-namespace ManagementSystem.Domain.Models.Dto
+﻿namespace ManagementSystem.Domain.Models.Dto
 {
     public class UserDto
     {
@@ -11,7 +9,6 @@ namespace ManagementSystem.Domain.Models.Dto
         public string Email { get; set; }
         public int DepartmentId { get; set; }
         public DepartmentDto Department { get; set; }
-        public List<ProjectDto>? Projects { get; set; }
         public List<AddressDto>? Addresses { get; set; }
     }
 }
