@@ -14,5 +14,6 @@ namespace ManagementSystem.Domain.Services.Abstract.User
         Task<bool> AssignUserToProjectAsync(AssignUserToProjectArgs args, CancellationToken cancellationToken = default);
         Task<bool> CreateUsersWithBogus(CancellationToken cancellationToken = default);
         Task<int> UpdateUserAddressAsync(UpdateAddressArgs args, CancellationToken cancellationToken = default);
+        Task<bool> ChangeStatusAsync(ChangeStatusArgs args, CancellationToken cancellationToken = default);
     }
 }

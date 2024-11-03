@@ -92,6 +92,23 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             return result > 0;
         }
 
+        public async Task<bool> ChangeStatusAsync(ChangeStatusArgs args, CancellationToken cancellationToken = default)
+        {
+            var user = await _userRepository.GetByIdAsync(
+                id: args.Id,
+                noTracking: false,
+                cancellationToken: default);
+
+            if (user is null)
+                throw new Exception("User not found");
+
+            user.Status = args.Status.ToString();
+
+            var result = await _userRepository.SaveChangeAsync(cancellationToken);
+
+            return result > 0;
+        }
+
         public async Task<int> CreateAsync(CreateUserArgs args, CancellationToken cancellationToken = default)
         {
             var entity = _mapper.Map<Domain.Entities.User>(args);

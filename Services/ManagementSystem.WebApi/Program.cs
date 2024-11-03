@@ -3,10 +3,10 @@ using FluentValidation.AspNetCore;
 using ManagementSystem.Application.Extensions;
 using ManagementSystem.Domain.Extensions;
 using ManagementSystem.Infrastructure.Extensions;
+using ManagementSystem.WebApi.Configurations.Swagger;
 using ManagementSystem.WebApi.Extensions;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Packages.Extensions;
@@ -16,8 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services
-    .AddControllers()
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    })
     .AddFluentValidation();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -51,6 +54,8 @@ builder.Services.AddMassTransitHostedService();
 builder.Services.AddSwaggerGen(opt =>
 { 
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "ManagementSystem", Version = "v1" });
+    opt.UseInlineDefinitionsForEnums();
+    opt.SchemaFilter<EnumSchemaFilter>();
     opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,

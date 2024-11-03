@@ -1,10 +1,12 @@
 ﻿using ManagementSystem.Domain.Services.Abstract.Comment;
 using ManagementSystem.Domain.Services.Abstract.Department;
+using ManagementSystem.Domain.Services.Abstract.History;
 using ManagementSystem.Domain.Services.Abstract.Location;
 using ManagementSystem.Domain.Services.Abstract.User;
 using ManagementSystem.Domain.Services.Abstract.WorkTask;
 using ManagementSystem.Domain.Services.Concrete.Comment;
 using ManagementSystem.Domain.Services.Concrete.Department;
+using ManagementSystem.Domain.Services.Concrete.History;
 using ManagementSystem.Domain.Services.Concrete.Location;
 using ManagementSystem.Domain.Services.Concrete.User;
 using ManagementSystem.Domain.Services.Concrete.WorkTask;
@@ -23,6 +25,7 @@ namespace ManagementSystem.Domain.Extensions
             services.AddScoped<IDomainPrincipal, DomainPrincipal>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IHistoryService, HistoryService>();
             return services;
         }
     }

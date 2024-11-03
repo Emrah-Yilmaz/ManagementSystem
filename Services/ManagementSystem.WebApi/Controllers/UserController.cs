@@ -130,5 +130,18 @@ namespace ManagementSystem.WebApi.Controllers
             var mappedResponse = _mapper.Map<List<UsersResponse>>(result);
             return Ok(mappedResponse);
         }
+        [HttpPatch("change-status")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ChangeStatus([FromQuery] ChangeStatusCommand request, CancellationToken cancellationToken = default)
+        {
+            var command = await _mediator.Send(request, cancellationToken);
+            if (!command)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
     }
 }
