@@ -9,6 +9,7 @@ using Packages.Loggings.SeriLog.Loggers;
 using Packages.Pipelines.Authorization;
 using Packages.Pipelines.Caching;
 using Packages.Pipelines.Logging;
+using Packages.Pipelines.Validation;
 using System.Reflection;
 
 namespace ManagementSystem.Application.Extensions
@@ -24,6 +25,7 @@ namespace ManagementSystem.Application.Extensions
                 configuration.AddOpenBehavior(typeof(CacheRemovingBehavior<,>));
                 configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
                 configuration.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
+                configuration.AddOpenBehavior(typeof(RequestValidationBehavior<,>));
             });
 
             services.AddFluentValidationAutoValidation();

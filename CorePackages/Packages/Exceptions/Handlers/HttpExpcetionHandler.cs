@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Packages.Exceptions.Converters;
 using Packages.Exceptions.HttpProblemDetails;
 using Packages.Exceptions.Types;
 using Packages.Extensions;
+using System.Net;
+using System.Text.Json;
 
 namespace Packages.Exceptions.Handlers
 {
@@ -13,9 +16,21 @@ namespace Packages.Exceptions.Handlers
             get => _response ?? throw new ArgumentNullException(nameof(_response));
             set => _response = value;
         }
+        private readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            Converters = { new SpecialCharacterRemovingConverter() },
+            WriteIndented = true
+        };
+
         protected override Task HandleException(ValidationException validationException)
         {
-            throw new NotImplementedException();
+            Response.StatusCode = StatusCodes.Status400BadRequest;
+            var errorResponse = new
+            {
+                Message = validationException.Message,
+                Errors = validationException.Errors
+            };
+            return Response.WriteAsync(JsonSerializer.Serialize(errorResponse, _jsonOptions));
         }
 
         protected override Task HandleException(Exception exception)

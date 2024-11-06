@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
+using Packages.Pipelines.Validation;
 
 namespace ManagementSystem.Application.Features.Queries.Department
 {
-    public class GetDeparmentsQueryValidator : AbstractValidator<GetDeparmentsQuery>
+    public class GetDeparmentsQueryValidator : AbstractValidator<GetDeparmentsQuery>, IRequestValidator
     {
         public GetDeparmentsQueryValidator()
         {
