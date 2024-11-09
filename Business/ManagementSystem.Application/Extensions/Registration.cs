@@ -21,10 +21,10 @@ namespace ManagementSystem.Application.Extensions
             services.AddMediatR(configuration =>
             {
                 configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+                configuration.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
                 configuration.AddOpenBehavior(typeof(CachingBehavior<,>));
                 configuration.AddOpenBehavior(typeof(CacheRemovingBehavior<,>));
                 configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
-                configuration.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
                 configuration.AddOpenBehavior(typeof(RequestValidationBehavior<,>));
             });
 

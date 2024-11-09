@@ -15,7 +15,7 @@ namespace ManagementSystem.Application.Features.Queries.User
 
         public async Task<List<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
-            var result = await _userService.GetUsers(cancellationToken);
+            var result = await _userService.GetUsers(request, cancellationToken);
             return result;
         }
     }

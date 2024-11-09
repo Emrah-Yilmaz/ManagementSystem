@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Request\Comment\" />
-    <Folder Include="Models\Request\User\" />
     <Folder Include="Models\Request\WorkTask\" />
   </ItemGroup>
 

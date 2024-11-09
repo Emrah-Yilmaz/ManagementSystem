@@ -346,7 +346,8 @@ namespace Packages.Repositories.EfCore
         params Func<IQueryable<TEntity>, IQueryable<TEntity>>[] includes)
         {
             var query = noTracking ? _dbContext.Set<TEntity>().AsNoTracking() : _dbContext.Set<TEntity>();
-            query = query.Where(predicate);
+            if (predicate is not null)
+                query = query.Where(predicate);
 
             foreach (var include in includes)
             {

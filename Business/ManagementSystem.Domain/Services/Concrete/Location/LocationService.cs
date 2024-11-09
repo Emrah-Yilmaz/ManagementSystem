@@ -21,6 +21,7 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
         private readonly IDistrictRepository _districtRepository;
         private readonly IQuarterRepository _quarterRepository;
         private readonly IOptions<LocationOptions> _options;
+        private static readonly string PublishedStatus = StatusType.Published.ToString();
 
         public LocationService(ILocationManager cityManager, ICityRepository cityRepository, IMapper mapper, IDistrictRepository districtRepository, IQuarterRepository quarterRepository, IOptions<LocationOptions> options)
         {
@@ -70,7 +71,7 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
             var cities = await _cityRepository.GetAllAsync(false, cancellationToken);
             if (cities is null || cities.Count == 0)
                 return false;
-
+            var districtList = new List<District>();
 
             foreach (var city in cities)
             {
@@ -83,27 +84,23 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
                     continue;
 
                 // Convert API data to entities
-                var districtList = apiResponse?.Data.SelectMany(p => p.Districts.Select(d => new District
+                var externalDistrictList = apiResponse?.Data.SelectMany(p => p.Districts.Select(d => new District
                 {
                     Name = d.Name,
                     CityId = city.Id,
-                    Status = StatusType.Published.ToString()
+                    Status = PublishedStatus
                 })).ToList();
 
-                var savedList = await _districtRepository.AddRangeAsync(districtList);
-                if (savedList > 0)
-                {
-                    continue;
-                }
-                else
-                {
-                    throw new BusinessException();
-                }
+                if (externalDistrictList is not null || externalDistrictList.Count > 0)
+                    districtList.AddRange(externalDistrictList);
             }
 
-            return true;
-
-
+            var savedList = await _districtRepository.AddRangeAsync(districtList);
+            if (savedList > 0)
+                return true;
+            else
+                throw new BusinessException();
+            
         }
 
         public async Task<bool> CreateQuartersAsync(CancellationToken cancellationToken = default)
@@ -114,15 +111,18 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
 
             int limit = _options.Value.Quarter.Limit;
             int offset = _options.Value.Quarter.Offset;
+
+            var quarters = new List<Quarter>();
+
             while (true)
             {
                 var result = await _locationManager.GetQuartersAsync(limit, offset, cancellationToken);
-                var quarters = result?.Data;
-                if (quarters is null || quarters.Count == 0)
+                var exQuarters = result?.Data;
+                if (exQuarters is null || exQuarters.Count == 0)
                     break;
                 foreach (var district in districts)
                 {
-                    var filteredList = quarters.Where(p => p.District == district.Name).ToList();
+                    var filteredList = exQuarters.Where(p => p.District == district.Name).ToList();
                     if (filteredList is null || filteredList.Count == 0)
                         continue;
 
@@ -131,20 +131,18 @@ namespace ManagementSystem.Domain.Services.Concrete.Location
                     {
                         Name = p.Name,
                         DistrictId = district.Id,
-                        Status = StatusType.Published.ToString() // Eğer Status özelliği varsa
+                        Status = PublishedStatus // Eğer Status özelliği varsa
                     }).ToList();
-
-                    var savedList = await _quarterRepository.AddRangeAsync(quarterList);
-                    if (savedList > 0)
-                    {
-                        continue;
-                    }
-                    else
-                        throw new BusinessException();
+                    if (quarterList is not null || quarterList.Count > 0)
+                        quarters.AddRange(quarterList);
                 }
                 offset += limit;
             }
-            return true;
+            var savedList = await _quarterRepository.AddRangeAsync(quarters);
+            if (savedList > 0)
+                return true;
+            else
+                throw new BusinessException();
         }
 
         public async Task<List<CityDto>?> GetCitiesAsync(CancellationToken cancellationToken = default)

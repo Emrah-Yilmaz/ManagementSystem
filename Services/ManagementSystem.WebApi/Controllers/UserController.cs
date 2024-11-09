@@ -2,6 +2,7 @@
 using ManagementSystem.Application.Features.Commands.User;
 using ManagementSystem.Application.Features.Queries.User;
 using ManagementSystem.Domain.TokenHandler;
+using ManagementSystem.WebApi.Models.Request.User;
 using ManagementSystem.WebApi.Models.Response.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -90,7 +91,7 @@ namespace ManagementSystem.WebApi.Controllers
             return Ok(mappedResult);
         }
 
-        [HttpPost("AssignDepartment")]
+        [HttpPost("assign-department")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [AllowAnonymous]
@@ -103,7 +104,7 @@ namespace ManagementSystem.WebApi.Controllers
 
             return Ok(result);
         }
-        [HttpPost("AssignProject")]
+        [HttpPost("assing-project")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AssignProject(AssignProjectCommand request, CancellationToken cancellationToken = default)
@@ -115,19 +116,21 @@ namespace ManagementSystem.WebApi.Controllers
 
             return Ok(result);
         }
-        [HttpGet("UsersWithRelations")]
-        [ProducesResponseType(typeof(List<UsersResponse>), StatusCodes.Status200OK)]
+        [HttpGet("users")]
+        [ProducesResponseType(typeof(List<UserResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetUsersWithRelations(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequest request, CancellationToken cancellationToken = default)
         {
             var query = new GetUsersQuery();
+            query.UserRequestType = request.UserRequestType;
+
             var result = await _mediator.Send(query, cancellationToken);
 
             if (result is null || result.Count == 0)
             {
                 return NotFound();
             }
-            var mappedResponse = _mapper.Map<List<UsersResponse>>(result);
+            var mappedResponse = _mapper.Map<List<UserResponse>>(result);
             return Ok(mappedResponse);
         }
         [HttpPatch("change-status")]

@@ -230,25 +230,57 @@ namespace ManagementSystem.Domain.Services.Concrete.User
             return mappedResult;
         }
 
-        public async Task<List<UserDto>> GetUsers(CancellationToken cancellationToken = default)
+        public async Task<List<UserDto>> GetUsers(GetUserArgs args, CancellationToken cancellationToken = default)
         {
-            var users = await _userRepository.GetListAsync(predicate: null,
-                noTracking: false,
-                orderBy: null,
-                includes: new Expression<Func<Domain.Entities.User, object>>[]
-                {
-                    p => p.Department,
-                    d => d.Projects
-                });
+            var includes  = new Func<IQueryable<Entities.User>, IQueryable<Entities.User>>[]{ };
+            var users = new List<Entities.User>();
 
+            if (args.UserRequestType == UserRequestType.Basic)
+            {
+                users = await _userRepository.GetListAsync(predicate: null,
+                            noTracking: false,
+                            orderBy: null,
+                            includes: null);
+                return Map(users);
+            }
+            else if (args.UserRequestType == UserRequestType.Address)
+            {
+                includes = new Func<IQueryable<Entities.User>, IQueryable<Entities.User>>[]
+                {
+                    q => q.Include(u => u.Addresses), // User'dan Addresses'e geçiş
+                    q => q.Include(u => u.Addresses).ThenInclude(a => a.City),// Address'ten City'e geçiş
+                    q => q.Include(u => u.Addresses).ThenInclude(a => a.District), // Address'ten City'e geçiş
+                    q => q.Include(u => u.Addresses).ThenInclude(a => a.Quarter) // Address'ten City'e geçiş
+                };
+            }
+            else
+            {
+                includes = new Func<IQueryable<Entities.User>, IQueryable<Entities.User>>[]
+                            {
+                            q => q.Include(d => d.Department).ThenInclude(p => p.Projects),
+                            q => q.Include(u => u.Addresses), // User'dan Addresses'e geçiş
+                            q => q.Include(u => u.Addresses).ThenInclude(a => a.City),// Address'ten City'e geçiş
+                            q => q.Include(u => u.Addresses).ThenInclude(a => a.District), // Address'ten City'e geçiş
+                            q => q.Include(u => u.Addresses).ThenInclude(a => a.Quarter) // Address'ten City'e geçiş
+                            };
+            }
+
+            users = _userRepository.GetThenInclude(
+                             predicate: null,
+                             noTracking: true,
+                             includes: includes).ToList();
+
+            return Map(users);
+        }
+
+        private List<UserDto> Map(List<Domain.Entities.User> users)
+        {
             if (users is null || users.Count == 0)
                 return null;
 
             var mappedResult = _mapper.Map<List<UserDto>>(users);
-
             return mappedResult;
         }
-
         public async Task<LoginDto> LoginAsync(LoginArgs args, CancellationToken cancellationToken = default)
         {
             var dbUser =  _userRepository.GetThenInclude(u => u.UserName == args.UserName, false, q => q.Include(ur => ur.UserRoles).ThenInclude(role => role.Role)).FirstOrDefault();

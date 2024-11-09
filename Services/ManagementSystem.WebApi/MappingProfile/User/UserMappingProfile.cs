@@ -9,8 +9,6 @@ namespace ManagementSystem.WebApi.MappingProfile.User
         public UserMappingProfile()
         {
             CreateMap<LoginDto, LoginResponse>();
-            CreateMap<UserDto, UsersResponse>()
-                .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Department.Projects));
 
             CreateMap<UserDto, UserResponse>()
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department))
